@@ -9,7 +9,7 @@
 
 class Test6 {
     public static void main(String[] a) {
-        for (String x : a) { // int i =0;i < a.length; i++ // x = a[i] = x
+        for (String x : a) { // int i =0;i < a.length; i++ // String[] x = a[i]
             System.out.println(x);
         }
     }
