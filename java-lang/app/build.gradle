@@ -2,6 +2,7 @@
 
 plugins {
     id 'java'
+    id 'eclipse' // Eclipse IDE 관련 작업을 수행할 수 있는 Plug-in
 }
 
 repositories {
@@ -24,3 +25,16 @@ java {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+// eclipse 프로젝트 이름을 설정하기
+eclipse {
+    project {
+        name = "java-lang" //프로젝트 이름을 지정하지 않으면 폴더이름을 사용 (예 : app)
+    }
+    jdt {
+      sourceCompatibility = 21
+      targetCompatibility = 21
+      javaRuntimeName = "JavaSE-21"
+    }
+}
+
