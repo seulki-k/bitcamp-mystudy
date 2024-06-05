@@ -1,4 +1,4 @@
-package bitcamp.myapp;
+package bitcamp.myapp2;
 
 public class ProjectMenu {
     boolean choice = true;
