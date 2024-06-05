@@ -1,3 +1,3 @@
-# src/main/resources
+#src/main/resources
 
-application 실행에 관련된 설정 파일 두는 폴더
+**애플리케이션**을 실행할 때 사용할 설정 파일을 두는 폴더

@@ -1,19 +1,23 @@
 package com.eomcs.lang.ex04;
 
-//# 한 문장에서 여러 개의 변수를 선언하기
-//- 한 문장으로 같은 유형의 변수를 여러 개 선언할 수 있다.
-//- 문법
-//  데이터타입 변수1, 변수2, 변수3;
+//# 클래스 블록과 컴파일 II
+//- 한 소스 파일에 여러 개의 클래스 블록이 있을 경우 각 블록 당 한 개의 클래스 파일(.class)이 생성된다.
 //
-public class Exam0120 {
-  
-  public static void main(String[] args) {
-    // 한 번에 한 개씩 변수를 선언할 수 있고,
-    int i1;
-    int i2;
-    int i3;
-    
-    // 콤마(,)를 사용하여 여러 개의 변수를 한 번에 선언할 수 있다.
-    int j1, j2, j3;
-  }
-}
+
+class A {}
+class B {}
+class C {}
+ 
+//## 실습
+//1) 컴파일하기
+//- $ javac -d bin/main -encoding UTF-8 src/main/java/com/eomcs/lang/ex01/Exam1_2.java
+//
+//2) 생성된 클래스 파일 확인하기
+//- bin/main/com/eomcs/lang/ex01 디렉토리에 A.class, B.class, C.class 파일이 생성된다
+//
+
+
+
+
+
+
