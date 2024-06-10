@@ -1,4 +1,5 @@
 package bitcamp.myapp2;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ProjectMenu {
@@ -17,7 +18,7 @@ public class ProjectMenu {
         System.out.println(line);
 
         for (int i =0;i<menus.length;i++) { //메뉴 목록들 출력.
-            if(menus[i] == "종료"){
+            if(menus[i].equals("종료")){
                 System.out.println(Ansi.BOLD + Ansi.RED + (i+1) + ". " + menus[i] + Ansi.RESET);
             }else {
                 System.out.println((i+1)+". " + menus[i]);
@@ -30,18 +31,23 @@ public class ProjectMenu {
 
         while(true) {
             System.out.print(">");
-            int menuNo = scanner.nextInt();                //메뉴 번호 입력
-            if(menuNo >=1 && menuNo <= menus.length) {
-                if (menus[menuNo - 1] == "종료") {
-                    System.out.println(menus[menuNo - 1]);
-                    break;
-                }else {
-                    System.out.println((menuNo) + ". " + menus[menuNo-1]);
-                }
-            } else{
+            try {
+                int menuNo =scanner.nextInt();
+                if (menuNo >= 1 && menuNo <= menus.length) {
+                    if (menus[menuNo - 1].equals("종료")) {
+                        System.out.println(menus[menuNo - 1]);
+                        break;
+                    } else {
+                        System.out.println(menuNo + ". " + menus[menuNo - 1]);
+                    }
+                } else {
                     System.out.println("메뉴번호가 올바르지 않습니다.");
                 }
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력하세요.");
+                scanner.nextLine();
             }
+        }
         scanner.close();
     }
 }
