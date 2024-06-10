@@ -7,17 +7,6 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        boolean projectMenuChoice = true;
-
         ProjectMenu.project();
-
-        while (projectMenuChoice) {
-            System.out.print(">");
-            String menu = scanner.next();
-            projectMenuChoice = ProjectMenu.menu(menu);
-        }
-        scanner.close();
-
     }
 }

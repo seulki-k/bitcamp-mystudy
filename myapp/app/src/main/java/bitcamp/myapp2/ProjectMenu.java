@@ -1,48 +1,47 @@
 package bitcamp.myapp2;
+import java.util.Scanner;
 
 public class ProjectMenu {
-    boolean choice = true;
-
     static void  project() {
-        String line = Ansi.BOLD + "=================================" + Ansi.RESET;
-        System.out.println(line);
-        System.out.println(Ansi.BOLD +"[팀 프로젝트 관리 시스템]"+ Ansi.RESET);
-        System.out.println("1. 회원");
-        System.out.println("2. 팀");
-        System.out.println("3. 프로젝트");
-        System.out.println("4. 게시판");
-        System.out.println("5. 도움말");
-        System.out.println(Ansi.BOLD + Ansi.RED + "6. 종료" + Ansi.RESET);
-        System.out.println(line);
-    }
 
-    public static boolean menu(String a){
-        switch (a) {
-            case "1" :
-                System.out.println(a + ". 회원");
-                break;
-            case "2":
-                System.out.println(a + ". 팀");
-                break;
-            case "3":
-                System.out.println(a + ". 프로젝트");
-                break;
-            case "4":
-                System.out.println(a +". 게시판");
-                break;
-            case "5":
-                System.out.println(a +". 도움말");
-                break;
-            case "6":
-                System.out.println(a +". 종료합니다.");
-                return false;
-            case "menu":
-                project();
-                break;
-            default:
-                System.out.println("메뉴 번호가 올바르지 않습니다.");
-                break;
+        String[] menus = new String[]{ //menu 목록들 저장.
+                "회원",
+                "팀",
+                "프로젝트",
+                "게시판",
+                "도움말",
+                "종료"};
+
+        String line = Ansi.BOLD + "=================================" + Ansi.RESET;
+
+        System.out.println(line);
+
+        for (int i =0;i<menus.length;i++) { //메뉴 목록들 출력.
+            if(menus[i] == "종료"){
+                System.out.println(Ansi.BOLD + Ansi.RED + (i+1) + ". " + menus[i] + Ansi.RESET);
+            }else {
+                System.out.println((i+1)+". " + menus[i]);
+            }
         }
-        return true;
+
+        System.out.println(line);
+
+        Scanner scanner = new Scanner(System.in);
+
+        while(true) {
+            System.out.print(">");
+            int menuNo = scanner.nextInt();                //메뉴 번호 입력
+            if(menuNo >=1 && menuNo <= menus.length) {
+                if (menus[menuNo - 1] == "종료") {
+                    System.out.println(menus[menuNo - 1]);
+                    break;
+                }else {
+                    System.out.println((menuNo) + ". " + menus[menuNo-1]);
+                }
+            } else{
+                    System.out.println("메뉴번호가 올바르지 않습니다.");
+                }
+            }
+        scanner.close();
     }
 }
