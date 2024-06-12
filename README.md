@@ -1,6 +1,3 @@
 # bitcamp-mystudy
 
-okok
-
-listen
-
+change user.email
