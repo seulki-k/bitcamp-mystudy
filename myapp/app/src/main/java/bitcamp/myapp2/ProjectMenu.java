@@ -36,7 +36,7 @@ public class ProjectMenu {
         printMenu(menus);
         while(true) {
             System.out.print(">");
-            String menuNo2 = scanner.next();
+            String menuNo2 = scanner.nextLine();
             if(menuNo2.equals("menu")){
                printMenu(menus);
             }
