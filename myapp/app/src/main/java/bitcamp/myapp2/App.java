@@ -3,11 +3,25 @@
  */
 package bitcamp.myapp2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) {// 메인 메뉴
+    static List<User> users = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
+    static String state = "메인"; // 현재 사용자 위치를 나타내는 state 변수. 초기 "메인"
+    static String[][] menus = { // 2차원 배열로 메뉴 목록 저장
+            {"회원", "팀", "프로젝트", "게시판", "도움말", "종료"}, // 메인 메뉴 0
+            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 회원 메뉴 1
+            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 팀 메뉴 2
+            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 프로젝트 메뉴 3
+            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 게시판 메뉴 4
+            {"등록", "목록", "조회", "변경", "삭제", "이전"}  // 도움말 메뉴 5
+    };
 
+    public static void main(String[] args) {
+        // 메인 메뉴
         printMenu();
         while (true) {
             String command = prompt(); // 값 입력
@@ -24,7 +38,7 @@ public class App {
                         break;
                     } else {
                         System.out.println(menuNo + ". " + menutitle); // 메뉴 출력
-                        subProject(menuNo); //서브 프로젝트 시작
+                        subProject(menuNo, users); //서브 프로젝트 시작
                     }
                 } catch (NumberFormatException e) { // menu를 제외한 문자형 예외처리 (String -> int 형변환 시 에러)
                     System.out.println("잘못된 입력입니다. 숫자를 입력하세요.");
@@ -33,18 +47,6 @@ public class App {
         }
         scanner.close();
     }
-    static User user1 = new User("","","","");
-    static int countMember = 0;
-    static Scanner scanner = new Scanner(System.in);
-    static String state = "메인"; // 현재 사용자 위치를 나타내는 state 변수. 초기 "메인"
-    static String[][] menus = { // 2차원 배열로 메뉴 목록 저장
-            {"회원", "팀", "프로젝트", "게시판", "도움말", "종료"}, // 메인 메뉴 0
-            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 회원 메뉴 1
-            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 팀 메뉴 2
-            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 프로젝트 메뉴 3
-            {"등록", "목록", "조회", "변경", "삭제", "이전"}, // 게시판 메뉴 4
-            {"등록", "목록", "조회", "변경", "삭제", "이전"}  // 도움말 메뉴 5
-    };
 
     static String getMenuTitle(int menuNo) { // 메뉴 이름 출력
         int currentIndex = getCurrentMenuIndex();
@@ -105,9 +107,7 @@ public class App {
         return scanner.nextLine();
     }
 
-
-
-    static void subProject(int menuNo) {
+    static void subProject(int menuNo, List<User> users) {
         switch (menuNo) {
             case 1:
                 state = "회원";
@@ -144,20 +144,8 @@ public class App {
                         break;
                     } else { // 선택한 메뉴 출력
                         System.out.println(menuNo2 + ". " + menutitle);
-                        if(menutitle.equals("등록")){
-                                countMember++;
-                                System.out.println("이름?");
-                                String name = scanner.nextLine();
-                                System.out.println("이메일?");
-                                String email = scanner.nextLine();
-                                System.out.println("암호?");
-                                String password = scanner.nextLine();
-                                System.out.println("연락처?");
-                                String tel = scanner.nextLine();
-                                user1 = new User(name,email,password,tel);
-                            }else if(menutitle.equals("목록")){
-                                user1.print();
-                        }
+                        UserCommand.userMenu(users, menutitle);
+
                     }
                 } catch (NumberFormatException e) { // menu를 제외한 문자형 예외처리 (String -> int 형변환 시 에러)
                     System.out.println("잘못된 입력입니다. 숫자를 입력하세요.");
