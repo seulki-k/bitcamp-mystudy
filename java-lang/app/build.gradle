@@ -37,4 +37,8 @@ eclipse {
       javaRuntimeName = "JavaSE-21"
     }
 }
-
+dependencies { //lombok
+//게터, 세터, 생성자, toString, equals, hashCode 등의 메서드를 자동으로 생성
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
