@@ -15,22 +15,20 @@ public class Test01 {
     // 다음 식을 연산자 우선 순위를 고려하지 않고 순서대로 계산하라!
     // 2 + 3 - 1 * 7 / 3 = ?
 
-    // 계산 결과를 담을 변수를 준비한다.
-    Calculator2 c2 = new Calculator2();
-    int result =0;
-    // 메서드를 호출하여 작업을 수행하고,
-    // 리턴 결과는 로컬 변수에 저장한다.
-    c2.plus(2);
-    c2.plus(3);
-    c2.minus( 1);
-    c2.multiple(7);
-    c2.divide(3);
-    result = Calculator2.plus2(result, 2);
-    System.out.printf("result = %d\n", c2.getResult());
-    System.out.printf("result = %d\n", result);
-    c2.clearResult();
-  }
+    Calculator c1 = new Calculator();
+    c1.plus(2);
+    c1.plus( 3);
+    c1.minus(1);
+    c1.multiple(7);
+    c1.divide(3);
 
+    System.out.printf("result = %d\n", c1.getRsult());
+
+    c1.clear();
+
+    System.out.printf("result = %d\n", c1.getRsult());
+
+  }
 }
 // 클래스 문법의 용도?
 // 1) 사용자 정의 데이터 타입 만들 때
