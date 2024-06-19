@@ -3,7 +3,7 @@ package bitcamp.myapp.command;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class BoardCommand {
     private static final int MAX_SIZE = 100;
@@ -34,8 +34,8 @@ public class BoardCommand {
     private static void addBoard() {
         Board board = new Board();
         board.setTitle(Prompt.input("제목?"));
-        board.setDescription(Prompt.input("내용?"));
-        board.setDateWritten(LocalDate.now());
+        board.setContent(Prompt.input("내용?"));
+        board.setCreatedDate(new Date());
         board.setViewCount(0);
         boards[boardLength++] = board;
         System.out.println("등록했습니다.");
@@ -45,28 +45,28 @@ public class BoardCommand {
         System.out.println("번호 제목 작성일 조회수");
         for (int i = 0; i < boardLength; i++) {
             Board board = boards[i];
-            System.out.printf("%d %s %s %s %s\n", (i + 1), board.getTitle(), board.getDescription(), board.getDateWritten(), board.getViewCount());
+            System.out.printf("%d %s %tD %s\n", (i + 1), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
     }
 
     private static void viewBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
         if (boardNo < 1 || boardNo > boardLength) {
-            System.out.println("없는 프로젝트입니다.");
+            System.out.println("없는 게시글입니다.");
             return;
         }
         Board board = boards[boardNo - 1];
-        board.increaseViewCount();
+        board.setViewCount(board.getViewCount() + 1);
         System.out.printf("제목 : %s\n", board.getTitle());
-        System.out.printf("내용 : %s\n", board.getDescription());
-        System.out.printf("작성일 : %s\n", board.getDateWritten());
+        System.out.printf("내용 : %s\n", board.getContent());
+        System.out.printf("작성일 : %1$tY-%1$tm-%1$td  %1$tH : %1$tM : %1$tS\n", board.getCreatedDate());
         System.out.printf("조회수 : %s\n", board.getViewCount());
     }
 
     private static void deleteBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
         if (boardNo < 1 || boardNo > boardLength) {
-            System.out.println("없는 회원입니다.");
+            System.out.println("없는 게시판입니다.");
             return;
         }
         //다음 값을 앞으로 당긴다.
@@ -84,9 +84,10 @@ public class BoardCommand {
             return;
         }
         Board board = boards[boardNo - 1];
+        board.setViewCount(board.getViewCount() + 1);
         board.setTitle(Prompt.input("게시판명(%s)\n", board.getTitle()));
-        board.setDescription(Prompt.input("내용(%s)\n", board.getDescription()));
-        board.setDateWritten(LocalDate.now());
+        board.setContent(Prompt.input("내용(%s)\n", board.getContent()));
+
 
         System.out.println("변경하였습니다.");
 

@@ -1,11 +1,11 @@
 package bitcamp.myapp.vo;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Board {
     private String title; //제목
-    private String description; //내용
-    private LocalDate dateWritten; //작성일
+    private String content; //내용
+    private Date createdDate;
     private int viewCount;
 
     public int getViewCount() {
@@ -24,25 +24,23 @@ public class Board {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public LocalDate getDateWritten() {
-        return dateWritten;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDateWritten(LocalDate date) {
-        this.dateWritten = date;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public void increaseViewCount() {
-        this.viewCount++;
+    static class B {
+        String name;
     }
-
-
 }

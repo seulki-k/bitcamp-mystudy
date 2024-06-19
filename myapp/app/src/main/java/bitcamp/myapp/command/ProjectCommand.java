@@ -13,7 +13,7 @@ public class ProjectCommand {
         System.out.printf("[%s]\n", command);
         switch (command) {
             case "등록":
-                addProejct();
+                addProject();
                 break;
             case "조회":
                 viewProject();
@@ -30,7 +30,7 @@ public class ProjectCommand {
         }
     }
 
-    private static void addProejct() {
+    private static void addProject() {
         Project project = new Project();
         project.setTitle(Prompt.input("프로젝트명?"));
         project.setDescription(Prompt.input("설명?"));
