@@ -6,9 +6,6 @@ import bitcamp.myapp.vo.Board;
 import java.util.Date;
 
 public class BoardCommand {
-    private static final int MAX_SIZE = 100;
-    private static int boardLength = 0;
-    private static Board[] boards = new Board[MAX_SIZE];
 
     public static void executeBoardCommand(String command) {
         System.out.printf("[%s]\n", command);
@@ -37,25 +34,25 @@ public class BoardCommand {
         board.setContent(Prompt.input("내용?"));
         board.setCreatedDate(new Date());
         board.setViewCount(0);
-        boards[boardLength++] = board;
+        board.setNo(Board.getSeqNo());
+        BoardList.add(board);
         System.out.println("등록했습니다.");
     }
 
     private static void listBoard() {
         System.out.println("번호 제목 작성일 조회수");
-        for (int i = 0; i < boardLength; i++) {
-            Board board = boards[i];
-            System.out.printf("%d %s %tD %s\n", (i + 1), board.getTitle(), board.getCreatedDate(), board.getViewCount());
+        for (Board board : BoardList.toArray()) {
+            System.out.printf("%d %s %tD %s\n", board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
     }
 
     private static void viewBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
-            System.out.println("없는 게시글입니다.");
+        Board board = BoardList.findByNo(boardNo);
+        if (board == null) {
+            System.out.println("없는 게시판입니다.");
             return;
         }
-        Board board = boards[boardNo - 1];
         board.setViewCount(board.getViewCount() + 1);
         System.out.printf("제목 : %s\n", board.getTitle());
         System.out.printf("내용 : %s\n", board.getContent());
@@ -65,31 +62,23 @@ public class BoardCommand {
 
     private static void deleteBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
+        Board deletedBoard = BoardList.delete(boardNo);
+        if (deletedBoard != null) {
+            System.out.printf("'%s' 게시판 삭제했습니다.\n", deletedBoard.getTitle());
+        } else
             System.out.println("없는 게시판입니다.");
-            return;
-        }
-        //다음 값을 앞으로 당긴다.
-        for (int i = boardNo; i < boardLength; i++) {
-            boards[i - 1] = boards[i];
-        }
-        boards[--boardLength] = null;
-        System.out.println("삭제했습니다.");
     }
 
     private static void updateBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        if (boardNo < 1 || boardNo > boardLength) {
+        Board board = BoardList.findByNo(boardNo);
+        if (board == null) {
             System.out.println("없는 게시판입니다.");
             return;
         }
-        Board board = boards[boardNo - 1];
         board.setViewCount(board.getViewCount() + 1);
         board.setTitle(Prompt.input("게시판명(%s)\n", board.getTitle()));
         board.setContent(Prompt.input("내용(%s)\n", board.getContent()));
-
-
         System.out.println("변경하였습니다.");
-
     }
 }

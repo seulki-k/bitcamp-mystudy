@@ -1,13 +1,26 @@
 package bitcamp.myapp.vo;
 
+
 public class User {
 
-    //Non-static 필드(Field; 변수) = 인스턴스(instance) 필드
-    //=> new 명령을 통해 Heap 메모리 영역에
+    private static int seqNo; //하나의 변수 계속 생성 static 사용 정적변수
+    private int no; //인스턴스를 계속 생성해야된다.
     private String name;
     private String email;
     private String password;
     private String tel;
+
+    public static int getNextSeqNo() {
+        return ++seqNo;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int No) {
+        this.no = No;
+    }
 
     public String getName() {
         return name;
@@ -40,4 +53,5 @@ public class User {
     public void setTel(String tel) {
         this.tel = tel;
     }
+
 }

@@ -7,8 +7,9 @@ import bitcamp.myapp.util.Prompt;
 
 public class App {
 
-    static String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "도움말", "종료"};
+    static String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "공지사항", "도움말", "종료"};
     static String[][] subMenus = {
+            {"등록", "목록", "조회", "변경", "삭제"},
             {"등록", "목록", "조회", "변경", "삭제"},
             {"등록", "목록", "조회", "변경", "삭제"},
             {"등록", "목록", "조회", "변경", "삭제"},
@@ -34,7 +35,7 @@ public class App {
                     } else if (menuTitle.equals("종료")) {
                         break;
                     } else {
-                        if (menuNo >= 1 && menuNo <= 3) {
+                        if (menuNo >= 1 && menuNo <= subMenus.length) {
                             processMenu(menuTitle, subMenus[menuNo - 1]);
                         } else {
                             System.out.println(menuTitle);
@@ -114,6 +115,10 @@ public class App {
                             break;
                         case "게시판":
                             BoardCommand.executeBoardCommand(subMenuTitle);
+                            break;
+                        case "공지사항":
+                            break;
+                        case "도움말":
                             break;
                         default:
                             System.out.printf("%s 메뉴의 명령을 처리할 수 없습니다.\n", menuTitle);
