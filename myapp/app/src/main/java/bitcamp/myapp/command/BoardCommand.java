@@ -7,48 +7,51 @@ import java.util.Date;
 
 public class BoardCommand {
 
-    public static void executeBoardCommand(String command) {
+    BoardList boardList = new BoardList();
+
+    public  void executeBoardCommand(String command) {
         System.out.printf("[%s]\n", command);
+
         switch (command) {
             case "등록":
-                addBoard();
+                this.addBoard(command);
                 break;
             case "목록":
-                listBoard();
+                this.listBoard(command);
                 break;
             case "조회":
-                viewBoard();
+                this.viewBoard(command);
                 break;
             case "변경":
-                updateBoard();
+                this.updateBoard(command);
                 break;
             case "삭제":
-                deleteBoard();
+                this.deleteBoard(command);
                 break;
         }
     }
 
-    private static void addBoard() {
+    private void addBoard(String boardTitle) {
         Board board = new Board();
         board.setTitle(Prompt.input("제목?"));
         board.setContent(Prompt.input("내용?"));
         board.setCreatedDate(new Date());
         board.setViewCount(0);
         board.setNo(Board.getSeqNo());
-        BoardList.add(board);
+        this.boardList.add(board);
         System.out.println("등록했습니다.");
     }
 
-    private static void listBoard() {
+    private void listBoard(String boardTitle) {
         System.out.println("번호 제목 작성일 조회수");
-        for (Board board : BoardList.toArray()) {
+        for (Board board : this.boardList.toArray()) {
             System.out.printf("%d %s %tD %s\n", board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
     }
 
-    private static void viewBoard() {
+    private void viewBoard(String boardTitle) {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board board = BoardList.findByNo(boardNo);
+        Board board = this.boardList.findByNo(boardNo);
         if (board == null) {
             System.out.println("없는 게시판입니다.");
             return;
@@ -60,18 +63,18 @@ public class BoardCommand {
         System.out.printf("조회수 : %s\n", board.getViewCount());
     }
 
-    private static void deleteBoard() {
+    private void deleteBoard(String boardTitle) {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board deletedBoard = BoardList.delete(boardNo);
+        Board deletedBoard = boardList.delete(boardNo);
         if (deletedBoard != null) {
             System.out.printf("'%s' 게시판 삭제했습니다.\n", deletedBoard.getTitle());
         } else
             System.out.println("없는 게시판입니다.");
     }
 
-    private static void updateBoard() {
+    private void updateBoard(String boardTitle) {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board board = BoardList.findByNo(boardNo);
+        Board board = boardList.findByNo(boardNo);
         if (board == null) {
             System.out.println("없는 게시판입니다.");
             return;
