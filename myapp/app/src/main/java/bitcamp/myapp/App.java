@@ -84,7 +84,7 @@ public class App {
     }
 
     boolean isValidateMenu(int menuNo, String[] menus) {
-        return menuNo >= 1 && menuNo <= menus.length;
+        return menuNo >= 1 && menuNo <= menus.length; //범위 안에 있는 지 확인
     }
 
     String getMenuTitle(int menuNo, String[] menus) {
@@ -108,11 +108,11 @@ public class App {
 
             try {
                 int menuNo = Integer.parseInt(command);
-                String subMenuTitle = getMenuTitle(menuNo, menus);
+                String subMenuTitle = getMenuTitle(menuNo, menus); //menus 범위 안에 없으면 null, 있으면 출력
                 if (subMenuTitle == null) {
                     System.out.println("유효한 메뉴 번호가 아닙니다.");
                 } else {
-                    switch (menuTitle) {
+                    switch (menuTitle) { //처음 메서드에서 파라미터를 통해 들어온 값.
                         case "회원":
                             userCommand.executeUserCommand(subMenuTitle);
                             break;

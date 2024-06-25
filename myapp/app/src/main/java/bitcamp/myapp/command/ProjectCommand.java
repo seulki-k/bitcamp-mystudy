@@ -1,7 +1,6 @@
 package bitcamp.myapp.command;
 
 import bitcamp.myapp.util.Prompt;
-import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
@@ -68,8 +67,8 @@ public class ProjectCommand {
         System.out.printf("기간 : %s ~ %s\n", project.getStartDate(), project.getEndDate());
         System.out.println("팀원 : ");
 
-        for (int i = 0; i < project.countMembers(); i++) {
-            User user = project.getMember(i);
+        for (int i = 0; i < project.getMembers().size(); i++) {
+            User user = (User) project.getMembers().get(i);
             System.out.println("-" + user.getName());
         }
     }
@@ -117,21 +116,21 @@ public class ProjectCommand {
                 System.out.println("없는 팀원입니다.");
                 continue;
             }
-            if (project.containsMember(user)) {
+            if (project.getMembers().contains(user)) {
                 System.out.printf("%s 은 현재 팀원입니다.\n", user.getName());
                 continue;
             }
-            project.addMember(user);
+            project.getMembers().add(user);
             System.out.printf("%s 을 추가했습니다.\n", user.getName());
         }
     }
 
     private void deleteMembers(Project project) {
-        for (int i = project.countMembers() - 1; i >= 0; i--) {
-            User user = project.getMember(i);
+        for (int i =0; i < project.getMembers().size();i++) {
+            User user = (User) project.getMembers().get(i);
             String str = Prompt.input("팀원(%s) 삭제?", user.getName());
             if (str.equalsIgnoreCase("y")) {
-                project.deleteMember(i);
+                project.getMembers().remove(i);
                 System.out.printf("%s 팀원을 삭제합니다.\n", user.getName());
             } else {
                 System.out.printf("%s 팀원을 유지합니다.\n", user.getName());
