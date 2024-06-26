@@ -20,7 +20,7 @@ public class LinkedList extends AbstractList implements List {
     @Override
     public Object get(int index) {
         if (index < 0 || index >= size) {
-            throw null;
+            return null;
         }
         Node cursor = first;
         int currentIndex = 0;
