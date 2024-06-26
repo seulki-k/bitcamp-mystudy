@@ -1,11 +1,12 @@
-package bitcamp.myapp.command;
+package bitcamp.myapp.util;
 
-public class LinkedList {
-    Node first;
-    Node last;
+public class LinkedList extends AbstractList implements List {
+    private Node first;
+    private Node last;
     int size;
 
-    public void append(Object value) {
+    @Override
+    public void add(Object value) {
         Node newNode = new Node(value);
         if (first == null) {
             last = first = newNode;
@@ -16,7 +17,8 @@ public class LinkedList {
         size++;
     }
 
-    public Object getValue(int index) {
+    @Override
+    public Object get(int index) {
         if (index < 0 || index >= size) {
             throw null;
         }
@@ -33,7 +35,8 @@ public class LinkedList {
         return null;
     }
 
-    public Object delete(int index) {
+    @Override
+    public Object remove(int index) {
         if (index < 0 || index >= size) {
             return null;
         }
@@ -71,12 +74,13 @@ public class LinkedList {
         return deletedNode.value;
     }
 
-    public int index(Object value) {
+    @Override
+    public int indexOf(Object value) {
         Node cursor = first;
         int currentIndex = 0;
 
         while (cursor != null) {
-            if (cursor.value == value) {
+            if (cursor.value.equals(value)) {
                 return currentIndex;
             }
             cursor = cursor.next;
@@ -85,54 +89,27 @@ public class LinkedList {
         return -1;
     }
 
-    public Object[] getArray() {
+    @Override
+    public Object[] toArray() {
         Object[] arr = new Object[size];
 
         Node cursor = first;
 
-        for (int i =0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             arr[i] = cursor.value;
             cursor = cursor.next;
         }
         return arr;
     }
 
-    public int size() {
-        return size;
-    }
+    //1) 스태틱 중첩 클래스 - 자기가 소속된 필드 내에서만 사용 시 static 생성 / 인스턴스 메서드나 필드로 사용 안하면 non-static으로 생성
+    private static class Node {
+        Object value;
+        Node next;
 
-    public void printAll() {
-        Node cursor = first;
-        while (cursor != null) {
-            System.out.print(cursor.value + ",");
-            cursor = cursor.next;
+        public Node(Object value) {
+            this.value = value;
         }
-        System.out.println();
     }
 
-    public static void main(String[] args) {
-        LinkedList list = new LinkedList();
-        list.append("홍길동");
-        list.append("임꺽정");
-        list.append("유관순");
-        list.append("안중근");
-        list.append("윤봉길");
-        list.append("김구");
-
-        list.printAll();
-
-        list.delete(2);
-        list.printAll();
-
-        list.delete(2);
-        list.printAll();
-
-        list.delete(2);
-        list.printAll();
-
-        list.delete(1);
-        list.printAll();
-
-
-    }
 }

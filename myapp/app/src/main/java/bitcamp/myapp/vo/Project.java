@@ -1,7 +1,9 @@
 package bitcamp.myapp.vo;
 
 
-import bitcamp.myapp.command.ArrayList;
+import bitcamp.myapp.util.ArrayList;
+
+import java.util.Objects;
 
 public class Project {
     private static int seqNo; //하나의 변수 계속 생성 static 사용 정적변수
@@ -10,7 +12,29 @@ public class Project {
     private String description;
     private String startDate;
     private String endDate;
-    ArrayList members = new ArrayList();
+
+    public Project() {
+
+    }
+
+    public Project(int no) {
+        this.no = no;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Project project = (Project) object;
+        return no == project.no;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(no);
+    }
+
+    private ArrayList members = new ArrayList();
 
     public static int getSeqNo() {
         return ++seqNo;

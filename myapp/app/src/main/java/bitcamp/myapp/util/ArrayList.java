@@ -1,11 +1,11 @@
-package bitcamp.myapp.command;
+package bitcamp.myapp.util;
 
 
 import java.util.Arrays;
 
-public class ArrayList {
+public class ArrayList extends AbstractList implements List{
     private final static int MAX_SIZE = 3;
-    private int size = 0;
+
     private Object[] list = new Object[MAX_SIZE];
 
     public void add(Object object) {
@@ -20,19 +20,7 @@ public class ArrayList {
         }
         list[size++] = object;
     }
-//
-//    private void grow(){
-//        int oldSize = list.length;
-//
-//        int newSize = oldSize + (oldSize >> 1); // 50% 증가
-//
-//        Object[] arr = new Object[newSize]; // 새배열 생성
-//
-//        for (int i = 0; i < list.length; i++) { //기존 배열의 값을 복사해온다.
-//            arr[i] = list[i];
-//        }
-//        list = arr; //기존 배열의 주소를 버리고 새 배열의 주소를 담는다.
-//    }
+
 
     public Object remove(int index) {
         if (index < 0 || index >= size) {
@@ -55,7 +43,7 @@ public class ArrayList {
 
     public int indexOf(Object obj) {
         for (int i = 0; i < size; i++) {
-            if (list[i] == obj) {
+            if (list[i].equals(obj)) {
                 return i;
             }
         }
@@ -63,9 +51,6 @@ public class ArrayList {
     }
 
 
-    public int size() {
-        return size;
-    }
 
     public Object get(int index) {
         if (index < 0 || index >= size) {

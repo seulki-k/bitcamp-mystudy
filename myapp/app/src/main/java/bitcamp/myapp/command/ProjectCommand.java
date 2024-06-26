@@ -1,15 +1,18 @@
 package bitcamp.myapp.command;
 
+import bitcamp.myapp.util.ArrayList;
+import bitcamp.myapp.util.LinkedList;
+import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
 public class ProjectCommand {
 
-    ProjectList projectList = new ProjectList();
-    UserList userList;
+    LinkedList projectList = new LinkedList();
+    LinkedList userList;
 
-    public ProjectCommand(UserList userList) {
+    public ProjectCommand(LinkedList userList) {
         this.userList = userList;
     }
 
@@ -49,7 +52,7 @@ public class ProjectCommand {
 
     private void listProject() {
         System.out.println("번호 프로젝트 기간");
-        for (Object obj :projectList.toArray()) {
+        for (Object obj : projectList.toArray()) {
             Project project = (Project) obj;
             System.out.printf("%d %s %s ~ %s\n", project.getNo(), project.getTitle(), project.getStartDate(), project.getEndDate());
         }
@@ -57,7 +60,7 @@ public class ProjectCommand {
 
     private void viewProject() {
         int projectNo = Prompt.inputInt("프로젝트 번호?");
-        Project project = projectList.findByNo(projectNo);
+        Project project =(Project)projectList.get(projectList.indexOf(new Project(projectNo)));
         if (project == null) {
             System.out.println("없는 프로젝트입니다.");
             return;
@@ -75,7 +78,7 @@ public class ProjectCommand {
 
     private void updateProject() {
         int projectNo = Prompt.inputInt("프로젝트 번호?");
-        Project project = projectList.findByNo(projectNo);
+        Project project =(Project)projectList.get(projectList.indexOf(new Project(projectNo)));
         if (project == null) {
             System.out.println("없는 프로젝트입니다.");
             return;
@@ -96,7 +99,7 @@ public class ProjectCommand {
 
     private void deleteProject() {
         int projectNo = Prompt.inputInt("프로젝트 번호?");
-        Project deleteProject = projectList.findByNo(projectNo);
+        Project deleteProject = (Project)projectList.get(projectList.indexOf(new Project(projectNo)));
         if (deleteProject != null) {
             projectList.remove(projectList.indexOf(deleteProject));
             System.out.printf("'%s' 프로젝트를 삭제했습니다.\n", deleteProject.getTitle());
@@ -111,7 +114,7 @@ public class ProjectCommand {
             if (userNo == 0) {
                 break;
             }
-            User user = userList.findByNo(userNo);
+            User user = (User) userList.get(userList.indexOf(new User(userNo)));
             if (user == null) {
                 System.out.println("없는 팀원입니다.");
                 continue;
@@ -126,7 +129,7 @@ public class ProjectCommand {
     }
 
     private void deleteMembers(Project project) {
-        for (int i =0; i < project.getMembers().size();i++) {
+        for (int i = 0; i < project.getMembers().size(); i++) {
             User user = (User) project.getMembers().get(i);
             String str = Prompt.input("팀원(%s) 삭제?", user.getName());
             if (str.equalsIgnoreCase("y")) {

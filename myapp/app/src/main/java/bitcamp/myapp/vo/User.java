@@ -1,6 +1,8 @@
 package bitcamp.myapp.vo;
 
 
+import java.util.Objects;
+
 public class User {
 
     private static int seqNo; //하나의 변수 계속 생성 static 사용 정적변수
@@ -9,6 +11,27 @@ public class User {
     private String email;
     private String password;
     private String tel;
+
+    public User() {
+    }
+
+    public User(int no) {
+        this.no = no;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        User user = (User) object;
+        return no == user.no;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(no);
+    }
+
 
     public static int getNextSeqNo() {
         return ++seqNo;

@@ -1,5 +1,7 @@
 package bitcamp.myapp.command;
 
+import bitcamp.myapp.util.ArrayList;
+import bitcamp.myapp.util.LinkedList;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 
@@ -7,9 +9,9 @@ import java.util.Date;
 
 public class BoardCommand {
 
-    BoardList boardList = new BoardList();
+    LinkedList boardList = new LinkedList();
 
-    public  void executeBoardCommand(String command) {
+    public void executeBoardCommand(String command) {
         System.out.printf("[%s]\n", command);
 
         switch (command) {
@@ -44,7 +46,7 @@ public class BoardCommand {
 
     private void listBoard() {
         System.out.println("번호 제목 작성일 조회수");
-        for (Object obj :  boardList.toArray()) {
+        for (Object obj : boardList.toArray()) {
             Board board = (Board) obj;
             System.out.printf("%d %s %tD %s\n", board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
@@ -52,7 +54,7 @@ public class BoardCommand {
 
     private void viewBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board board = boardList.findByNo(boardNo);
+        Board board = (Board) boardList.get(boardList.indexOf(new Board(boardNo)));
         if (board == null) {
             System.out.println("없는 게시판입니다.");
             return;
@@ -63,9 +65,10 @@ public class BoardCommand {
         System.out.printf("작성일 : %1$tY-%1$tm-%1$td  %1$tH : %1$tM : %1$tS\n", board.getCreatedDate());
         System.out.printf("조회수 : %s\n", board.getViewCount());
     }
+
     private void deleteBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board deletedBoard = boardList.findByNo(boardNo);
+        Board deletedBoard = (Board) boardList.get(boardList.indexOf(new Board(boardNo)));
         if (deletedBoard != null) {
             boardList.remove(boardList.indexOf(deletedBoard));
             System.out.printf("'%s' 게시판 삭제했습니다.\n", deletedBoard.getTitle());
@@ -75,7 +78,7 @@ public class BoardCommand {
 
     private void updateBoard() {
         int boardNo = Prompt.inputInt("게시판 번호?");
-        Board board = boardList.findByNo(boardNo);
+        Board board = (Board) boardList.get(boardList.indexOf(new Board(boardNo)));
         if (board == null) {
             System.out.println("없는 게시판입니다.");
             return;
