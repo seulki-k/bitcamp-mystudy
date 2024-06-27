@@ -3,7 +3,7 @@ package bitcamp.myapp.util;
 
 import java.util.Arrays;
 
-public class ArrayList extends AbstractList implements List{
+public class ArrayList extends AbstractList{
     private final static int MAX_SIZE = 3;
 
     private Object[] list = new Object[MAX_SIZE];

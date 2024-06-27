@@ -1,8 +1,6 @@
 package bitcamp.myapp.command;
 
-import bitcamp.myapp.util.ArrayList;
 import bitcamp.myapp.util.LinkedList;
-import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
@@ -93,7 +91,6 @@ public class ProjectCommand {
         addMembers(project);
 
         System.out.println("변경하였습니다.");
-
 
     }
 

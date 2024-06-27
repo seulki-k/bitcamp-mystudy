@@ -1,9 +1,8 @@
 package bitcamp.myapp.util;
 
-public class LinkedList extends AbstractList implements List {
+public class LinkedList extends AbstractList {
     private Node first;
     private Node last;
-    int size;
 
     @Override
     public void add(Object value) {

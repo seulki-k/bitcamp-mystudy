@@ -7,7 +7,7 @@ public interface List {
     // 인터페이스는 접근제어자 미입력 시 default가 아닌 public
     //abstract(추상 메서드) 생략 가능
     //규칙이기 때문에 메서드의 시그너처만 정의
-    void add(Object value);
+     void add(Object value);
 
     Object remove(int index);
 
@@ -16,6 +16,8 @@ public interface List {
     int indexOf(Object value);
 
     Object[] toArray();
+
+    public static final int hour = 24;
 
     int size();
 
