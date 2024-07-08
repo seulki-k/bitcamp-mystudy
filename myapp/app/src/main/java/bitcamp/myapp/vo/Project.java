@@ -1,86 +1,89 @@
 package bitcamp.myapp.vo;
 
-
 import bitcamp.myapp.util.ArrayList;
-
 import java.util.Objects;
 
 public class Project {
-    private static int seqNo; //하나의 변수 계속 생성 static 사용 정적변수
-    private int no; //인스턴스를 계속 생성해야된다.
-    private String title;
-    private String description;
-    private String startDate;
-    private String endDate;
 
-    public Project() {
+  private static int seqNo;
 
+  private int no;
+  private String title;
+  private String description;
+  private String startDate;
+  private String endDate;
+  private ArrayList members = new ArrayList();
+
+  public Project() {
+
+  }
+
+  public Project(int no) {
+    this.no = no;
+  }
+
+  public static int getNextSeqNo() {
+    return ++seqNo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public Project(int no) {
-        this.no = no;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    Project project = (Project) o;
+    return no == project.no;
+  }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Project project = (Project) object;
-        return no == project.no;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(no);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(no);
-    }
+  public int getNo() {
+    return no;
+  }
 
-    private ArrayList members = new ArrayList();
+  public void setNo(int no) {
+    this.no = no;
+  }
 
-    public static int getSeqNo() {
-        return ++seqNo;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public int getNo() {
-        return no;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setNo(int no) {
-        this.no = no;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getStartDate() {
+    return startDate;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getEndDate() {
+    return endDate;
+  }
 
-    public String getStartDate() {
-        return startDate;
-    }
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public ArrayList getMembers() {
-        return members;
-    }
+  public ArrayList getMembers() {
+    return members;
+  }
 }

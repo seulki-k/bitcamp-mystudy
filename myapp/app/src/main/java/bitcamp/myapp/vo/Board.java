@@ -5,81 +5,80 @@ import java.util.Objects;
 
 public class Board {
 
-    private static int seqNo; //하나의 변수 계속 생성 static 사용 정적변수
-    private int no; //인스턴스를 계속 생성해야된다.
-    private String title; //제목
-    private String content; //내용
-    private Date createdDate;
-    private int viewCount;
+  private static int seqNo;
 
-    public Board() {
+  private int no;
+  private String title;
+  private String content;
+  private Date createdDate;
+  private int viewCount;
 
+  public Board() {
+
+  }
+
+  public Board(int no) {
+    this.no = no;
+  }
+
+  public static int getNextSeqNo() {
+    return ++seqNo;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public Board(int no) {
-        this.no = no;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    Board board = (Board) o;
+    return no == board.no;
+  }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Board board = (Board) object;
-        return no == board.no;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(no);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(no);
-    }
+  public int getNo() {
+    return no;
+  }
 
-    public static int getSeqNo() {
-        return ++seqNo;
-    }
+  public void setNo(int no) {
+    this.no = no;
+  }
 
-    public static void setSeqNo(int seqNo) {
-        Board.seqNo = seqNo;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public int getNo() {
-        return no;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setNo(int no) {
-        this.no = no;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public int getViewCount() {
-        return viewCount;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public void setViewCount(int viewCount) {
-        this.viewCount = viewCount;
-    }
+  public Date getCreatedDate() {
+    return createdDate;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public int getViewCount() {
+    return viewCount;
+  }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-
+  public void setViewCount(int viewCount) {
+    this.viewCount = viewCount;
+  }
 }
