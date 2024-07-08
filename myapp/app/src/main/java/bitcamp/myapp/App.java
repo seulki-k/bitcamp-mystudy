@@ -9,16 +9,11 @@ public class App {
 
 
     String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "공지사항", "도움말", "종료"};
-    String[][] subMenus = {
-            {"등록", "목록", "조회", "변경", "삭제"},
-            {"등록", "목록", "조회", "변경", "삭제"},
-            {"등록", "목록", "조회", "변경", "삭제"},
-            {}
-    };
+
 
     UserCommand userCommand = new UserCommand("회원");
-    BoardCommand boardCommand = new BoardCommand();
-    BoardCommand noticeCommand = new BoardCommand();
+    BoardCommand boardCommand = new BoardCommand("게시판");
+//    BoardCommand noticeCommand = new BoardCommand();
     ProjectCommand projectCommand = new ProjectCommand(userCommand.getUserList(),"프로젝트");
 
 
@@ -100,7 +95,7 @@ public class App {
                 projectCommand.execute();
                 break;
             case "게시판":
-//                boardCommand.execute(subMenuTitle);
+                boardCommand.execute();
                 break;
             case "공지사항":
 //                noticeCommand.execute(subMenuTitle);
