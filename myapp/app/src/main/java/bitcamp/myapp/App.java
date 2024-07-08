@@ -19,7 +19,7 @@ public class App {
     UserCommand userCommand = new UserCommand("회원");
     BoardCommand boardCommand = new BoardCommand();
     BoardCommand noticeCommand = new BoardCommand();
-    ProjectCommand projectCommand = new ProjectCommand(userCommand.getUserList());
+    ProjectCommand projectCommand = new ProjectCommand(userCommand.getUserList(),"프로젝트");
 
 
     public static void main(String[] args) {
@@ -97,7 +97,7 @@ public class App {
                 userCommand.execute();
                 break;
             case "프로젝트":
-//                projectCommand.execute(subMenuTitle);
+                projectCommand.execute();
                 break;
             case "게시판":
 //                boardCommand.execute(subMenuTitle);
