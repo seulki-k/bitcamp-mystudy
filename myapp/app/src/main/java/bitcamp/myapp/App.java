@@ -1,26 +1,22 @@
 package bitcamp.myapp;
 
 import bitcamp.myapp.command.BoardCommand;
+import bitcamp.myapp.command.HelpCommand;
 import bitcamp.myapp.command.ProjectCommand;
 import bitcamp.myapp.command.UserCommand;
 import bitcamp.myapp.util.Prompt;
 
 public class App {
-
-
     String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "공지사항", "도움말", "종료"};
-
-
     UserCommand userCommand = new UserCommand("회원");
     BoardCommand boardCommand = new BoardCommand("게시판");
+    HelpCommand helpCommand = new HelpCommand();
 //    BoardCommand noticeCommand = new BoardCommand();
     ProjectCommand projectCommand = new ProjectCommand(userCommand.getUserList(),"프로젝트");
-
 
     public static void main(String[] args) {
         new App().execute();
     }
-
     void execute() {
         printMenu();
         String command;
@@ -66,7 +62,6 @@ public class App {
                 System.out.printf("%d. %s\n", (i + 1), mainMenus[i]);
             }
         }
-
         System.out.println(boldAnsi + line + resetAnsi);
     }
 
@@ -101,7 +96,7 @@ public class App {
 //                noticeCommand.execute(subMenuTitle);
                 break;
             case "도움말":
-                System.out.println("도움말입니다.");
+                helpCommand.execute();
                 break;
 
             default:
