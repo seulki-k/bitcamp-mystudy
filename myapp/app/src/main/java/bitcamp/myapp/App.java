@@ -80,13 +80,6 @@ public class App {
         System.out.println(boldAnsi + line + resetAnsi);
     }
 
-    void printSubMenu(String menuTitle, String[] menus) {
-        System.out.printf("[%s]\n", menuTitle);
-        for (int i = 0; i < menus.length; i++) {
-            System.out.printf("%d. %s\n", (i + 1), menus[i]);
-        }
-        System.out.println("9. 이전");
-    }
 
     boolean isValidateMenu(int menuNo, String[] menus) {
         return menuNo >= 1 && menuNo <= menus.length;
