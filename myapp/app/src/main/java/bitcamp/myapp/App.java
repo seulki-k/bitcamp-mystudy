@@ -1,16 +1,14 @@
 package bitcamp.myapp;
 
 import bitcamp.myapp.command.*;
-import bitcamp.myapp.util.ArrayList;
-import bitcamp.myapp.util.LinkedList;
-import bitcamp.myapp.util.List;
-import bitcamp.myapp.util.Prompt;
+import bitcamp.myapp.util.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class App {
-    String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "공지사항", "도움말", "종료"};
+    String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "도움말", "명령내역", "종료"};
+    Stack menuPath = new Stack();
 
     Map<String, Command> commandMap = new HashMap<>();
 
@@ -21,8 +19,9 @@ public class App {
 
         commandMap.put("회원", new UserCommand("회원", userList));
         commandMap.put("게시판", new BoardCommand("게시판", boardList));
-        commandMap.put("프로젝트", new ProjectCommand("프로젝트",projectList,userList));
+        commandMap.put("프로젝트", new ProjectCommand("프로젝트", projectList, userList));
         commandMap.put("도움말", new HelpCommand());
+        commandMap.put("명령내역", new HistoryCommand());
     }
 
     public static void main(String[] args) {
@@ -30,11 +29,15 @@ public class App {
     }
 
     void execute() {
+        menuPath.push("메인");
+
         printMenu();
+
         String command;
         while (true) {
             try {
-                command = Prompt.input("메인>");
+                command = Prompt.input("%s>", getMenuPathTitle(menuPath));
+
                 if (command.equals("menu")) {
                     printMenu();
                 } else {
@@ -99,6 +102,18 @@ public class App {
             System.out.printf("%s 메뉴의 명령을 처리할 수 없습니다.\n", menuTitle);
             return;
         }
-        command.execute();
+        command.execute(menuPath);
+    }
+
+    private String getMenuPathTitle(Stack menuPath) {
+        StringBuilder strBuilder = new StringBuilder();
+        ;
+        for (int i = 0; i < menuPath.size(); i++) {
+            if (strBuilder.length() > 0) {
+                strBuilder.append("/");
+            }
+            strBuilder.append(menuPath.get(i));
+        }
+        return strBuilder.toString();
     }
 }

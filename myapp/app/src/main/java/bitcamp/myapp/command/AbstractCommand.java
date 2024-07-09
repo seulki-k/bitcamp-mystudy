@@ -1,13 +1,16 @@
 package bitcamp.myapp.command;
 
 import bitcamp.myapp.util.Prompt;
+import bitcamp.myapp.util.Stack;
 
-public abstract class AbstractCommand implements Command{
+public abstract class AbstractCommand implements Command {
 
     protected String menuTitle;
+
     public AbstractCommand(String menuTitle) {
         this.menuTitle = menuTitle;
     }
+
     private void printMenus() {
         String[] menus = getMenus();
         System.out.printf("[%s]\n", menuTitle);
@@ -16,15 +19,20 @@ public abstract class AbstractCommand implements Command{
         }
         System.out.println("9. 이전");
     }
+
     @Override
-    public void execute() {
+    public void execute(Stack menuPath) {
+        menuPath.push(menuTitle);
+
         printMenus();
+
         while (true) {
-            String command = Prompt.input(String.format("메인/%s>", menuTitle));
+            String command = Prompt.input("%s>", getMenuPathTitle(menuPath));
             if (command.equals("menu")) {
                 printMenus();
                 continue;
             } else if (command.equals("9")) { // 이전 메뉴 선택
+                menuPath.pop();
                 return;
             }
             try {
@@ -50,6 +58,17 @@ public abstract class AbstractCommand implements Command{
     private boolean isValidateMenu(int menuNo) {
         String[] menus = getMenus();
         return menuNo >= 1 && menuNo <= menus.length;
+    }
+
+    private String getMenuPathTitle(Stack menuPath) {
+        StringBuilder strBuilder = new StringBuilder();;
+        for (int i = 0; i < menuPath.size(); i++) {
+            if (strBuilder.length() > 0) {
+                strBuilder.append("/");
+            }
+            strBuilder.append(menuPath.get(i));
+        }
+        return strBuilder.toString();
     }
 
     //구체적인 동작은 서브 클래스에서 정의
