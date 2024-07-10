@@ -3,8 +3,7 @@ package bitcamp.myapp;
 import bitcamp.myapp.command.*;
 import bitcamp.myapp.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class App {
     String[] mainMenus = new String[]{"회원", "프로젝트", "게시판", "도움말", "명령내역", "종료"};
