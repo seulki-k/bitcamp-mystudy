@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Prompt {
 
   static Scanner keyboardScanner = new Scanner(System.in);
-  static Queue inputQueue = new Queue();
+  static Queue<String> inputQueue = new Queue<>();
 
   public static String input(String format, Object... args) {
     String promptTitle = String.format(format + " ", args);
