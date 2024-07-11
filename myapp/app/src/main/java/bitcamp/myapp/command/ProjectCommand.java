@@ -1,20 +1,18 @@
 package bitcamp.myapp.command;
 
+import bitcamp.myapp.util.Iterator;
+import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
-import java.util.Iterator;
-import java.util.List;
-
-
 public class ProjectCommand extends AbstractCommand {
-    private List projectList;
-    private List userList;
-    String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
 
+    private List<Project> projectList;
+    private List<User> userList;
+    private String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
 
-    public ProjectCommand(String menuTitle, List projectList, List userList) {
+    public ProjectCommand(String menuTitle, List<Project> projectList, List<User> userList) {
         super(menuTitle);
         this.projectList = projectList;
         this.userList = userList;
@@ -23,44 +21,6 @@ public class ProjectCommand extends AbstractCommand {
     @Override
     protected String[] getMenus() {
         return menus;
-    }
-
-    private void addMembers(Project project) {
-        while (true) {
-            int userNo = Prompt.inputInt("추가할 팀원 번호?(종료: 0)");
-            if (userNo == 0) {
-                break;
-            }
-            int index = userList.indexOf(new User(userNo));
-
-            if (index == -1) {
-                System.out.println("없는 팀원입니다.");
-                continue;
-            }
-            User user = (User) userList.get(index);
-
-            if (project.getMembers().contains(user)) {
-                System.out.printf("'%s'은 현재 팀원입니다.\n", user.getName());
-                continue;
-            }
-
-            project.getMembers().add(user);
-            System.out.printf("'%s'을 추가했습니다.\n", user.getName());
-        }
-    }
-
-    private void deleteMembers(Project project) {
-        Object[] members = project.getMembers().toArray();
-        for (Object obj : members) {
-            User member = (User) obj;
-            String str = Prompt.input("팀원(%s) 삭제?", member.getName());
-            if (str.equalsIgnoreCase("y")) {
-                project.getMembers().remove(obj);
-                System.out.printf("'%s' 팀원을 삭제합니다.\n", member.getName());
-            } else {
-                System.out.printf("'%s' 팀원을 유지합니다.\n", member.getName());
-            }
-        }
     }
 
     @Override
@@ -85,6 +45,44 @@ public class ProjectCommand extends AbstractCommand {
         }
     }
 
+    private void addMembers(Project project) {
+        while (true) {
+            int userNo = Prompt.inputInt("추가할 팀원 번호?(종료: 0)");
+            if (userNo == 0) {
+                break;
+            }
+
+            int index = userList.indexOf(new User(userNo));
+            if (index == -1) {
+                System.out.println("없는 팀원입니다.");
+                continue;
+            }
+
+            User user = userList.get(index);
+            if (project.getMembers().contains(user)) {
+                System.out.printf("'%s'은 현재 팀원입니다.\n", user.getName());
+                continue;
+            }
+
+            project.getMembers().add(user);
+            System.out.printf("'%s'을 추가했습니다.\n", user.getName());
+        }
+    }
+
+    private void deleteMembers(Project project) {
+        Object[] members = project.getMembers().toArray();
+        for (Object obj : members) {
+            User member = (User) obj;
+            String str = Prompt.input("팀원(%s) 삭제?", member.getName());
+            if (str.equalsIgnoreCase("y")) {
+                project.getMembers().remove((User) obj);
+                System.out.printf("'%s' 팀원을 삭제합니다.\n", member.getName());
+            } else {
+                System.out.printf("'%s' 팀원을 유지합니다.\n", member.getName());
+            }
+        }
+    }
+
 
     private void addProject() {
         Project project = new Project();
@@ -105,9 +103,9 @@ public class ProjectCommand extends AbstractCommand {
 
     private void listProject() {
         System.out.println("번호 프로젝트 기간");
-        Iterator iterator = projectList.iterator();
+        Iterator<Project> iterator = projectList.iterator();
         while (iterator.hasNext()) {
-            Project project = (Project) iterator.next();
+            Project project = iterator.next();
             System.out.printf("%d %s %s ~ %s\n",
                     project.getNo(), project.getTitle(), project.getStartDate(), project.getEndDate());
         }
@@ -116,12 +114,12 @@ public class ProjectCommand extends AbstractCommand {
     private void viewProject() {
         int projectNo = Prompt.inputInt("프로젝트 번호?");
         int index = projectList.indexOf(new Project(projectNo));
-
         if (index == -1) {
             System.out.println("없는 프로젝트입니다.");
             return;
         }
-        Project project = (Project) projectList.get(index);
+
+        Project project = projectList.get(index);
 
         System.out.printf("프로젝트명: %s\n", project.getTitle());
         System.out.printf("설명: %s\n", project.getDescription());
@@ -137,13 +135,12 @@ public class ProjectCommand extends AbstractCommand {
     private void updateProject() {
         int projectNo = Prompt.inputInt("프로젝트 번호?");
         int index = projectList.indexOf(new Project(projectNo));
-
         if (index == -1) {
             System.out.println("없는 프로젝트입니다.");
             return;
         }
-        Project project = (Project) projectList.get(index);
 
+        Project project = projectList.get(index);
 
         project.setTitle(Prompt.input("프로젝트명(%s)?", project.getTitle()));
         project.setDescription(Prompt.input("설명(%s)?", project.getDescription()));
@@ -164,9 +161,9 @@ public class ProjectCommand extends AbstractCommand {
             System.out.println("없는 프로젝트입니다.");
             return;
         }
-        Project deletedProject = (Project) projectList.remove(index);
+
+        Project deletedProject = projectList.remove(index);
         System.out.printf("%d번 프로젝트를 삭제 했습니다.\n", deletedProject.getNo());
     }
+
 }
-
-
