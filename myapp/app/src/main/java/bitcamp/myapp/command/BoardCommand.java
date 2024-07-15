@@ -1,9 +1,8 @@
 package bitcamp.myapp.command;
 
-import bitcamp.myapp.util.Prompt;
+import bitcamp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class BoardCommand extends AbstractCommand {
