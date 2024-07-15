@@ -1,47 +1,99 @@
 package bitcamp.menu;
 
+import bitcamp.util.Prompt;
+
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.Stack;
 
-public class MenuGroup implements Menu {
+public class MenuGroup extends AbstractMenu {
 
-    private String title;
+    private MenuGroup parent;
+    private Stack<String> menuPath;
     private ArrayList<Menu> children = new ArrayList<>();
 
 
     public MenuGroup(String title) {
-        this.title = title;
+        super(title);
+        menuPath = new Stack<>();
     }
+
 
     @Override
     public void execute() {
+        menuPath.push(title);
+
+        printMenus();
+
+        while (true) {
+            String command = Prompt.input("%s>", getMenuPathTitle());
+            if (command.equals("menu")) {
+                printMenus();
+                continue;
+            } else if (command.equals("9")) { // 이전 메뉴 선택
+                menuPath.pop();
+                return;
+            }
+
+            try {
+                int menuNo = Integer.parseInt(command);
+                Menu menu = getMenu(menuNo - 1);
+                if (menu == null) {
+                    System.out.println("유효한 메뉴 번호가 아닙니다.");
+                    continue;
+                }
+
+                menu.execute();
+
+            } catch (NumberFormatException ex) {
+                System.out.println("숫자로 메뉴 번호를 입력하세요.");
+            }
+        }
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof MenuGroup menuGroup)) return false;
-        return Objects.equals(title, menuGroup.title);
+    private void printMenus() {
+        System.out.printf("[%s]\n", title);
+        int i =1;
+        for (Menu menu : children) {
+            System.out.printf("%d. %s\n",i++, menu.getTitle());
+        }
+        System.out.println("9. 이전");
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(title);
+    private String getMenuPathTitle() {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < menuPath.size(); i++) {
+            if (strBuilder.length() > 0) {
+                strBuilder.append("/");
+            }
+            strBuilder.append(menuPath.get(i));
+        }
+        return strBuilder.toString();
     }
 
-    public void addMenu(Menu menu){
-        children.add(menu);
+    private void setParent(MenuGroup parent){
+        this.parent = parent;
+        this.menuPath = parent.menuPath;
     }
 
-    public void remove(Menu menu) {
-        children.remove(menu);
+    public void addMenu(Menu child) {
+        if(child instanceof MenuGroup menus){
+            menus.setParent(this);
+        }
+        children.add(child);
     }
 
-    public Menu getMenu(int index){
+    public void remove(Menu child) {
+        children.remove(child);
+    }
+
+    public Menu getMenu(int index) {
+        if (index < 0 || index >= children.size()) {
+            return null;
+        }
         return children.get(index);
     }
 
-    public int countMenu(){
+    public int countMenu() {
         return children.size();
     }
 }

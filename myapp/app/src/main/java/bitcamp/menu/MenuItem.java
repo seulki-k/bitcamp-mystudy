@@ -2,9 +2,7 @@ package bitcamp.menu;
 
 import java.util.Objects;
 
-public class MenuItem implements Menu {
-
-    private String title;
+public class MenuItem extends AbstractMenu {
 
     @Override
     public void execute() {
@@ -12,19 +10,7 @@ public class MenuItem implements Menu {
     }
 
     public MenuItem(String title) {
-        this.title = title;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof MenuItem menuItem)) return false;
-        return Objects.equals(title, menuItem.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(title);
+        super(title);
     }
 
 
