@@ -2,11 +2,11 @@ package bitcamp.myapp;
 
 import bitcamp.menu.MenuGroup;
 import bitcamp.menu.MenuItem;
-import bitcamp.myapp.command.BoardCommand;
 import bitcamp.myapp.command.HelpCommand;
 import bitcamp.myapp.command.HistoryCommand;
-import bitcamp.myapp.command.ProjectCommand;
-import bitcamp.myapp.command.UserCommand;
+import bitcamp.myapp.command.board.*;
+import bitcamp.myapp.command.project.*;
+import bitcamp.myapp.command.user.*;
 import bitcamp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
@@ -17,11 +17,7 @@ import java.util.*;
 public class App {
 
     MenuGroup mainMenu = new MenuGroup("메인");
-    UserCommand userCommand;
-    BoardCommand boardCommand;
-    ProjectCommand projectCommand;
-    HelpCommand helpCommand;
-    HistoryCommand historyCommand;
+
 
 
     public App() {
@@ -29,38 +25,34 @@ public class App {
         List<Project> projectList = new LinkedList();
         List<Board> boardList = new LinkedList();
 
-        userCommand = new UserCommand(userList);
-        boardCommand = new BoardCommand(boardList);
-        projectCommand = new ProjectCommand(projectList, userList);
-        helpCommand = new HelpCommand();
-        historyCommand = new HistoryCommand();
 
         MenuGroup userMenu = new MenuGroup("회원");
-        userMenu.add(new MenuItem("등록", userCommand));
-        userMenu.add(new MenuItem("목록", userCommand));
-        userMenu.add(new MenuItem("조회", userCommand));
-        userMenu.add(new MenuItem("변경", userCommand));
-        userMenu.add(new MenuItem("삭제", userCommand));
+        userMenu.add(new MenuItem("등록", new UserAddCommand(userList)));
+        userMenu.add(new MenuItem("목록", new UserListCommand(userList)));
+        userMenu.add(new MenuItem("조회", new UserViewCommand(userList)));
+        userMenu.add(new MenuItem("변경", new UserupdateCommand(userList)));
+        userMenu.add(new MenuItem("삭제", new UserDeleteCommand(userList)));
         mainMenu.add(userMenu);
 
         MenuGroup projectMenu = new MenuGroup("프로젝트");
-        projectMenu.add(new MenuItem("등록", projectCommand));
-        projectMenu.add(new MenuItem("목록", projectCommand));
-        projectMenu.add(new MenuItem("조회", projectCommand));
-        projectMenu.add(new MenuItem("변경", projectCommand));
-        projectMenu.add(new MenuItem("삭제", projectCommand));
+        ProjectMemberHandler memberHandler = new ProjectMemberHandler(userList);
+        projectMenu.add(new MenuItem("등록", new ProjectAddCommand(projectList,memberHandler)));
+        projectMenu.add(new MenuItem("목록", new ProjectListCommand(projectList)));
+        projectMenu.add(new MenuItem("조회", new ProjectViewCommand(projectList)));
+        projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectList,memberHandler)));
+        projectMenu.add(new MenuItem("삭제", new ProjectDeleteCommand(projectList)));
         mainMenu.add(projectMenu);
 
         MenuGroup boardMenu = new MenuGroup("게시판");
-        boardMenu.add(new MenuItem("등록", boardCommand));
-        boardMenu.add(new MenuItem("목록", boardCommand));
-        boardMenu.add(new MenuItem("조회", boardCommand));
-        boardMenu.add(new MenuItem("변경", boardCommand));
-        boardMenu.add(new MenuItem("삭제", boardCommand));
+        boardMenu.add(new MenuItem("등록", new BoardAddCommand(boardList)));
+        boardMenu.add(new MenuItem("목록", new BoardListCommand(boardList)));
+        boardMenu.add(new MenuItem("조회", new BoardViewCommand(boardList)));
+        boardMenu.add(new MenuItem("변경", new BoardUpdateCommand(boardList)));
+        boardMenu.add(new MenuItem("삭제", new BoardDeleteCommand(boardList)));
         mainMenu.add(boardMenu);
 
-        mainMenu.add(new MenuItem("도움말", helpCommand));
-        mainMenu.add(new MenuItem("명령내역", historyCommand));
+        mainMenu.add(new MenuItem("도움말", new HelpCommand()));
+        mainMenu.add(new MenuItem("명령내역", new HistoryCommand()));
 
         mainMenu.setExitMenuTitle("종료");
     }
