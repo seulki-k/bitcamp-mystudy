@@ -18,13 +18,10 @@ public class App {
 
     MenuGroup mainMenu = new MenuGroup("메인");
 
-
-
     public App() {
         List<User> userList = new ArrayList();
         List<Project> projectList = new LinkedList();
         List<Board> boardList = new LinkedList();
-
 
         MenuGroup userMenu = new MenuGroup("회원");
         userMenu.add(new MenuItem("등록", new UserAddCommand(userList)));
@@ -36,10 +33,10 @@ public class App {
 
         MenuGroup projectMenu = new MenuGroup("프로젝트");
         ProjectMemberHandler memberHandler = new ProjectMemberHandler(userList);
-        projectMenu.add(new MenuItem("등록", new ProjectAddCommand(projectList,memberHandler)));
+        projectMenu.add(new MenuItem("등록", new ProjectAddCommand(projectList, memberHandler)));
         projectMenu.add(new MenuItem("목록", new ProjectListCommand(projectList)));
         projectMenu.add(new MenuItem("조회", new ProjectViewCommand(projectList)));
-        projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectList,memberHandler)));
+        projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectList, memberHandler)));
         projectMenu.add(new MenuItem("삭제", new ProjectDeleteCommand(projectList)));
         mainMenu.add(projectMenu);
 
@@ -57,7 +54,6 @@ public class App {
         mainMenu.setExitMenuTitle("종료");
     }
 
-
     public static void main(String[] args) {
         new App().execute();
     }
@@ -70,9 +66,7 @@ public class App {
         } catch (Exception ex) {
             System.out.println("실행 오류!");
         }
-
         System.out.println("종료합니다.");
-
         Prompt.close();
     }
 }
