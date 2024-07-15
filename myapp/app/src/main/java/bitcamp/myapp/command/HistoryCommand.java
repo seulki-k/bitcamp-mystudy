@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class HistoryCommand implements Command {
 
-  public void execute(Stack<String> menuPath) {
+  public void execute(String menuName) {
     Prompt.printHistory();
   }
 }

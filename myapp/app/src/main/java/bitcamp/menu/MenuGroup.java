@@ -10,7 +10,7 @@ public class MenuGroup extends AbstractMenu {
     private MenuGroup parent;
     private Stack<String> menuPath;
     private ArrayList<Menu> children = new ArrayList<>();
-
+    private String exitMenuTitle = "이전";
 
     public MenuGroup(String title) {
         super(title);
@@ -29,7 +29,7 @@ public class MenuGroup extends AbstractMenu {
             if (command.equals("menu")) {
                 printMenus();
                 continue;
-            } else if (command.equals("9")) { // 이전 메뉴 선택
+            } else if (command.equals("0")) { // 이전 메뉴 선택
                 menuPath.pop();
                 return;
             }
@@ -50,13 +50,18 @@ public class MenuGroup extends AbstractMenu {
         }
     }
 
+    public void setExitMenuTitle(String title) {
+        this.exitMenuTitle = title;
+    }
+
+
     private void printMenus() {
         System.out.printf("[%s]\n", title);
-        int i =1;
+        int i = 1;
         for (Menu menu : children) {
-            System.out.printf("%d. %s\n",i++, menu.getTitle());
+            System.out.printf("%d. %s\n", i++, menu.getTitle());
         }
-        System.out.println("9. 이전");
+        System.out.printf("0. %s\n", exitMenuTitle);
     }
 
     private String getMenuPathTitle() {
@@ -70,13 +75,13 @@ public class MenuGroup extends AbstractMenu {
         return strBuilder.toString();
     }
 
-    private void setParent(MenuGroup parent){
+    private void setParent(MenuGroup parent) {
         this.parent = parent;
         this.menuPath = parent.menuPath;
     }
 
-    public void addMenu(Menu child) {
-        if(child instanceof MenuGroup menus){
+    public void add(Menu child) {
+        if (child instanceof MenuGroup menus) {
             menus.setParent(this);
         }
         children.add(child);
