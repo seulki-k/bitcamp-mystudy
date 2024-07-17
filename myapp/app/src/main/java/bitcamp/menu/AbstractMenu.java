@@ -15,7 +15,10 @@ public abstract class AbstractMenu implements Menu {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof AbstractMenu menuGroup)) return false;
+        if (!(object instanceof AbstractMenu menuGroup)) {
+            return false;
+        }
+
         return Objects.equals(title, menuGroup.title);
     }
 
