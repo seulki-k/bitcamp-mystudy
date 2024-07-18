@@ -90,6 +90,8 @@ public class App {
             // 16진수 -> 2진수 0x12(16진수) = 0001 0010(2진수) << 8 => 0001 0010 0000 0000(2진수) => 0x1200(16진수)
             int userLength = (in.read() << 8) | in.read();
 
+            int maxUserNo = 0;
+
             for (int i = 0; i < userLength; i++) {
                 //한 개의 User 데이터 바이트 배열 크기 : 파일에서 2바이트를 읽는다.
                 int len = (in.read() << 8) | in.read();
@@ -101,7 +103,13 @@ public class App {
                 User user = User.valueOf(bytes);
                 userList.add(user);
 
+                if(user.getNo() > maxUserNo){
+                    maxUserNo = user.getNo();
+                }
             }
+
+            User.initSeqNo(maxUserNo);
+
         } catch (IOException e) {
             System.out.println("회원 정보 로딩 중 오류 발생");
         }
@@ -109,9 +117,69 @@ public class App {
     }
 
     private void loadProjects() {
+        try (FileInputStream in = new FileInputStream("project.data")) {
+            //입력 스트림에서 한 바이트(8비트)를 읽고 첫 번째 바이트를 왼쪽으로 8비트(1바이트) 이동
+            //첫 번째 바이트를 8비트 왼쪽으로 이동시킨 값과 두 번째 바이트를 비트 OR 연산
+            //예를 들어, 첫 번째 바이트가 0x12이고 두 번째 바이트가 0x34라면, (0x12 << 8) | 0x34는 0x1200 | 0x0034이 되어 0x1234가 된다.
+            // 16진수 -> 2진수 0x12(16진수) = 0001 0010(2진수) << 8 => 0001 0010 0000 0000(2진수) => 0x1200(16진수)
+            int projectLength = (in.read() << 8) | in.read();
+
+            int maxProjectNo = 0;
+
+            for (int i = 0; i < projectLength; i++) {
+                //한 개의 User 데이터 바이트 배열 크기 : 파일에서 2바이트를 읽는다.
+                int len = (in.read() << 8) | in.read();
+                //한 개의 user 데이터 바이트 배열 : 위에서 지정한 개 수 만큼 바이트 배열을 읽는다.
+                byte[] bytes = new byte[len];
+                in.read(bytes);
+
+                //User 바이트 배열을 가지고 User 객체를 생성
+                Project project = Project.valueOf(bytes);
+                projectList.add(project);
+
+                if(project.getNo() > maxProjectNo){
+                    maxProjectNo = project.getNo();
+                }
+            }
+
+            Project.setSeqNo(maxProjectNo);
+
+        } catch (IOException e) {
+            System.out.println("프로젝트 정보 로딩 중 오류 발생");
+        }
     }
 
     private void loadBoards() {
+        try (FileInputStream in = new FileInputStream("board.data")) {
+            //입력 스트림에서 한 바이트(8비트)를 읽고 첫 번째 바이트를 왼쪽으로 8비트(1바이트) 이동
+            //첫 번째 바이트를 8비트 왼쪽으로 이동시킨 값과 두 번째 바이트를 비트 OR 연산
+            //예를 들어, 첫 번째 바이트가 0x12이고 두 번째 바이트가 0x34라면, (0x12 << 8) | 0x34는 0x1200 | 0x0034이 되어 0x1234가 된다.
+            // 16진수 -> 2진수 0x12(16진수) = 0001 0010(2진수) << 8 => 0001 0010 0000 0000(2진수) => 0x1200(16진수)
+            int boardLength = (in.read() << 8) | in.read();
+
+            int maxBoardNo = 0;
+
+            for (int i = 0; i < boardLength; i++) {
+                //한 개의 User 데이터 바이트 배열 크기 : 파일에서 2바이트를 읽는다.
+                int len = (in.read() << 8) | in.read();
+                //한 개의 user 데이터 바이트 배열 : 위에서 지정한 개 수 만큼 바이트 배열을 읽는다.
+                byte[] bytes = new byte[len];
+                in.read(bytes);
+
+                //User 바이트 배열을 가지고 User 객체를 생성
+                Board board = Board.valueOf(bytes);
+                boardList.add(board);
+
+                if(board.getNo() > maxBoardNo){
+                    maxBoardNo = board.getNo();
+                }
+            }
+
+            Board.setSeqNo(maxBoardNo);
+
+        } catch (IOException e) {
+            System.out.println("게시판 정보 로딩 중 오류 발생");
+        }
     }
 
 
@@ -138,8 +206,6 @@ public class App {
                 out.write(bytes.length);
                 out.write(bytes);
 
-                out.write(user.getBytes());
-                //바이트 배열을 파일로 출력
             }
         } catch (IOException e) {
             System.out.println("회원 정보 저장 중 오류 발생!");
@@ -147,14 +213,46 @@ public class App {
     }
 
     private void saveProjects() {
-        for (Project project : projectList) {
-            // project 객체에 저장된 값을 꺼내 파일로 출력한다.
+        //try 객체를 나갈 때 자동 close 해준다.
+        try (FileOutputStream out = new FileOutputStream("project.data");) {
+            // 몇 개의 데이터를 읽을지 알려주기 위해 저장 데이터의 개수를 출력한다.
+            out.write(projectList.size() >> 8);
+            out.write(projectList.size());
+
+            for (Project project : projectList) {
+                //user 객체에 저장된 값을 꺼내 파일로 출력한다.
+                byte[] bytes = project.getBytes();
+                //User 데이터의 바이트 배열 크기를 출력한다.
+                // 왜? 읽을 때 한 갱 분량의 User 바이트 배열을 읽기 위해
+                out.write(bytes.length >> 8);
+                out.write(bytes.length);
+                out.write(bytes);
+
+            }
+        } catch (IOException e) {
+            System.out.println("프로젝트 정보 저장 중 오류 발생!");
         }
     }
 
     private void saveBoards() {
-        for (Board board : boardList) {
-            //board 객체에 저장된 값을 꺼내 파일로 출력한다.
+        //try 객체를 나갈 때 자동 close 해준다.
+        try (FileOutputStream out = new FileOutputStream("board.data");) {
+            // 몇 개의 데이터를 읽을지 알려주기 위해 저장 데이터의 개수를 출력한다.
+            out.write(boardList.size() >> 8);
+            out.write(boardList.size());
+
+            for (Board board : boardList) {
+                //user 객체에 저장된 값을 꺼내 파일로 출력한다.
+                byte[] bytes = board.getBytes();
+                //User 데이터의 바이트 배열 크기를 출력한다.
+                // 왜? 읽을 때 한 갱 분량의 User 바이트 배열을 읽기 위해
+                out.write(bytes.length >> 8);
+                out.write(bytes.length);
+                out.write(bytes);
+
+            }
+        } catch (IOException e) {
+            System.out.println("회원 정보 저장 중 오류 발생!");
         }
     }
 
