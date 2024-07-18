@@ -12,10 +12,7 @@ import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class App {
@@ -78,8 +75,45 @@ public class App {
     }
 
     private void loadData() {
+        loadUsers();
+        loadProjects();
+        loadBoards();
+
         System.out.println("데이터를 로딩 했습니다.");
     }
+
+    private void loadUsers() {
+        try (FileInputStream in = new FileInputStream("user.data")) {
+            //입력 스트림에서 한 바이트(8비트)를 읽고 첫 번째 바이트를 왼쪽으로 8비트(1바이트) 이동
+            //첫 번째 바이트를 8비트 왼쪽으로 이동시킨 값과 두 번째 바이트를 비트 OR 연산
+            //예를 들어, 첫 번째 바이트가 0x12이고 두 번째 바이트가 0x34라면, (0x12 << 8) | 0x34는 0x1200 | 0x0034이 되어 0x1234가 된다.
+            // 16진수 -> 2진수 0x12(16진수) = 0001 0010(2진수) << 8 => 0001 0010 0000 0000(2진수) => 0x1200(16진수)
+            int userLength = (in.read() << 8) | in.read();
+
+            for (int i = 0; i < userLength; i++) {
+                //한 개의 User 데이터 바이트 배열 크기 : 파일에서 2바이트를 읽는다.
+                int len = (in.read() << 8) | in.read();
+                //한 개의 user 데이터 바이트 배열 : 위에서 지정한 개 수 만큼 바이트 배열을 읽는다.
+                byte[] bytes = new byte[len];
+                in.read(bytes);
+
+                //User 바이트 배열을 가지고 User 객체를 생성
+                User user = User.valueOf(bytes);
+                userList.add(user);
+
+            }
+        } catch (IOException e) {
+            System.out.println("회원 정보 로딩 중 오류 발생");
+        }
+
+    }
+
+    private void loadProjects() {
+    }
+
+    private void loadBoards() {
+    }
+
 
     private void saveData() {
         saveUsers();

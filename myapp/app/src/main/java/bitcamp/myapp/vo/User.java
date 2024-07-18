@@ -1,5 +1,6 @@
 package bitcamp.myapp.vo;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,15 +28,41 @@ public class User {
         return ++seqNo;
     }
 
-    public byte[] getBytes() throws IOException {
+    public static User valueOf(byte[] bytes) throws IOException {
+        try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
+            User user = new User();
+            user.setNo(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
 
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-            // 4 Byte 단위로 분할하여 바이트를 출력 스트림으로 사용\
-            // 2byte - user 데이터 개 수, 2byte - user 데이터 바이트 배열 크기
-            // 4byte - no Field
-            // 2byte - name byte 배열 크기, * byte - name 바이트
-            // 2byte - email, * byte
-            // 2byte - password, * byte
+            byte[] buf = new byte[1000];
+
+            int len = in.read() << 8 | in.read();
+            in.read(buf, 0, len);
+            user.setName(new String(buf, 0, len, StandardCharsets.UTF_8));
+
+            len = in.read() << 8 | in.read();
+            in.read(buf, 0, len);
+            user.setEmail(new String(buf, 0, len, StandardCharsets.UTF_8));
+
+            len = in.read() << 8 | in.read();
+            in.read(buf, 0, len);
+            user.setPassword(new String(buf, 0, len, StandardCharsets.UTF_8));
+
+            len = in.read() << 8 | in.read();
+            in.read(buf, 0, len);
+            user.setTel(new String(buf, 0, len, StandardCharsets.UTF_8));
+
+            return user;
+        }
+    }
+
+    public byte[] getBytes() throws IOException {
+        // 4 Byte 단위로 분할하여 바이트를 출력 스트림으로 사용\
+        // 2byte - user 데이터 개 수, 2byte - user 데이터 바이트 배열 크기
+        // 4byte - no Field
+        // 2byte - name byte 배열 크기, * byte - name 바이트
+        // 2byte - email, * byte
+        // 2byte - password, * byte
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             out.write(no >> 24);
             out.write(no >> 16);
             out.write(no >> 8);
