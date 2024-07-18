@@ -34,17 +34,14 @@ public class Project {
     return ++seqNo;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Project project = (Project) o;
-    return no == project.no;
+  public static void initSeqNo(int no) {
+    seqNo = no;
   }
+
+  public static int getSeqNo() {
+    return seqNo;
+  }
+
   public static Project valueOf(byte[] bytes) throws IOException {
     try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
       Project project = new Project();
@@ -78,26 +75,11 @@ public class Project {
         project.getMembers().add(user);
       }
 
-
       return project;
     }
   }
 
-  public static int getSeqNo() {
-    return seqNo;
-  }
-
-  public static void setSeqNo(int seqNo) {
-    Project.seqNo = seqNo;
-  }
-
   public byte[] getBytes() throws IOException {
-    // 4 Byte 단위로 분할하여 바이트를 출력 스트림으로 사용\
-    // 2byte - user 데이터 개 수, 2byte - user 데이터 바이트 배열 크기
-    // 4byte - no Field
-    // 2byte - name byte 배열 크기, * byte - name 바이트
-    // 2byte - email, * byte
-    // 2byte - password, * byte
     try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       out.write(no >> 24);
       out.write(no >> 16);
@@ -128,7 +110,7 @@ public class Project {
       out.write(members.size());
 
       for (User member : members) {
-        byte[] memberBytes = member.getBytes(); // User 클래스에 getBytes() 메서드 구현 필요
+        byte[] memberBytes = member.getBytes();
         out.write(memberBytes.length >> 8);
         out.write(memberBytes.length);
         out.write(memberBytes);
@@ -137,6 +119,19 @@ public class Project {
       return out.toByteArray(); // return 하기 전에 out.close()가 자동 호출된다.
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Project project = (Project) o;
+    return no == project.no;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hashCode(no);

@@ -142,7 +142,7 @@ public class App {
                 }
             }
 
-            Project.setSeqNo(maxProjectNo);
+            Project.initSeqNo(maxProjectNo);
 
         } catch (IOException e) {
             System.out.println("프로젝트 정보 로딩 중 오류 발생");
