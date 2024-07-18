@@ -12,16 +12,20 @@ import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class App {
 
     MenuGroup mainMenu = new MenuGroup("메인");
+    List<User> userList = new ArrayList();
+    List<Project> projectList = new LinkedList();
+    List<Board> boardList = new LinkedList();
 
     public App() {
-        List<User> userList = new ArrayList();
-        List<Project> projectList = new LinkedList();
-        List<Board> boardList = new LinkedList();
 
         MenuGroup userMenu = new MenuGroup("회원");
         userMenu.add(new MenuItem("등록", new UserAddCommand(userList)));
@@ -62,11 +66,63 @@ public class App {
         System.out.println("      [프로젝트 관리 시스템]");
         System.out.println("----------------------------------");
         try {
+            loadData();
             mainMenu.execute();
         } catch (Exception ex) {
             System.out.println("실행 오류!");
+        } finally {
+            saveData();
         }
         System.out.println("종료합니다.");
         Prompt.close();
     }
+
+    private void loadData() {
+        System.out.println("데이터를 로딩 했습니다.");
+    }
+
+    private void saveData() {
+        saveUsers();
+        saveProjects();
+        saveBoards();
+        System.out.println("데이터를 저장 했습니다.");
+    }
+
+    private void saveUsers() {
+        //try 객체를 나갈 때 자동 close 해준다.
+        try (FileOutputStream out = new FileOutputStream("user.data");) {
+            // 몇 개의 데이터를 읽을지 알려주기 위해 저장 데이터의 개수를 출력한다.
+            out.write(userList.size() >> 8);
+            out.write(userList.size());
+
+            for (User user : userList) {
+                //user 객체에 저장된 값을 꺼내 파일로 출력한다.
+                byte[] bytes = user.getBytes();
+                //User 데이터의 바이트 배열 크기를 출력한다.
+                // 왜? 읽을 때 한 갱 분량의 User 바이트 배열을 읽기 위해
+                out.write(bytes.length >> 8);
+                out.write(bytes.length);
+                out.write(bytes);
+
+                out.write(user.getBytes());
+                //바이트 배열을 파일로 출력
+            }
+        } catch (IOException e) {
+            System.out.println("회원 정보 저장 중 오류 발생!");
+        }
+    }
+
+    private void saveProjects() {
+        for (Project project : projectList) {
+            // project 객체에 저장된 값을 꺼내 파일로 출력한다.
+        }
+    }
+
+    private void saveBoards() {
+        for (Board board : boardList) {
+            //board 객체에 저장된 값을 꺼내 파일로 출력한다.
+        }
+    }
+
+
 }
