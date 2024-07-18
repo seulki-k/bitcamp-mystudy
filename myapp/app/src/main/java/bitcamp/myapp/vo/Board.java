@@ -42,6 +42,9 @@ public class Board {
     public static Board valueOf(byte[] bytes) throws IOException {
         try (ByteArrayInputStream in = new ByteArrayInputStream(bytes)) {
             Board board = new Board();
+            //ex) 0x12 << 8 | 0x34
+            // 0x12 << 8 => 0000 0110 << 8 => 0000 0110 0000 0000
+            // => 0x1200 | 0x34 => 0x1234
             board.setNo(in.read() << 24 | in.read() << 16 | in.read() << 8 | in.read());
 
             byte[] buf = new byte[1000];

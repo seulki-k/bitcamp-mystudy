@@ -136,7 +136,7 @@ public class App {
                 //User 바이트 배열을 가지고 User 객체를 생성
                 Project project = Project.valueOf(bytes);
                 projectList.add(project);
-
+                // 시퀀스 넘버를 갱신
                 if(project.getNo() > maxProjectNo){
                     maxProjectNo = project.getNo();
                 }
