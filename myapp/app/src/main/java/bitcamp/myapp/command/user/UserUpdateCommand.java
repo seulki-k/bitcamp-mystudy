@@ -6,11 +6,11 @@ import bitcamp.util.Prompt;
 
 import java.util.List;
 
-public class UserupdateCommand implements Command {
+public class UserUpdateCommand implements Command {
 
     private List<User> userList;
 
-    public UserupdateCommand(List<User> list) {
+    public UserUpdateCommand(List<User> list) {
         this.userList = list;
     }
 
