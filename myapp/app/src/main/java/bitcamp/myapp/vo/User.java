@@ -3,11 +3,16 @@ package bitcamp.myapp.vo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-// 메모리 설계도
-public class User {
+
+// Serializable 인터페이스
+// - 추상 메서드가 없다.
+// - 직렬화/역직렬화 승인한다는 표시
+// - 유사한 예) Cloneable 인터페이스
+public class User implements Serializable {
 
     private static int seqNo;
 
@@ -28,14 +33,58 @@ public class User {
         return ++seqNo;
     }
 
-    public static void initSeqNo(int no){
+    public static void initSeqNo(int no) {
         seqNo = no;
     }
 
-    public static int getSeqNo(){
+    public static int getSeqNo() {
         return seqNo;
     }
 
+    public String toCsvString() {
+        return new StringBuilder()
+                .append(no).append(",")
+                .append(name).append(",")
+                .append(email).append(",")
+                .append(password).append(",")
+                .append(tel)
+                .toString();
+    }
+
+    public static User valueOf(String csv){
+        String[] values = csv.split(","); // csv : "1.홍길동, hong@test.com,1111,010-102-1020"
+        User user = new User();
+        user.setNo(Integer.valueOf(values[0]));
+        user.setName(values[1]);
+        user.setEmail(values[2]);
+        user.setPassword(values[3]);
+        user.setTel(values[4]);
+        return user;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "no=" + no +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", tel='" + tel + '\'' +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        User user = new User();
+        user.setNo(100);
+        user.setName("홍길동");
+        user.setEmail("hong@test.com");
+        user.setPassword("1111");
+        user.setTel("010-123-1231");
+        String csv = user.toCsvString();
+        System.out.println(csv);
+        User user2 = User.valueOf(csv);
+        System.out.println(user2.toString());
+    }
 
     @Override
     public boolean equals(Object o) {
