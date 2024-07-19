@@ -20,8 +20,6 @@ public class Board implements Serializable {
         seqNo = no;
     }
 
-
-
     public Board() {
 
     }
@@ -55,9 +53,6 @@ public class Board implements Serializable {
         board.setViewCount(Integer.valueOf(values[4]));
         return board;
     }
-
-
-
 
     @Override
     public String toString() {
