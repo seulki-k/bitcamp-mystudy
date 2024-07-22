@@ -1,4 +1,5 @@
 package bitcamp.myapp.vo;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -6,7 +7,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class Board implements Serializable {
+// Serializable 인터페이스
+// - 추상 메서드가 없다.
+// - 직렬화/역직렬화 승인한다는 표시
+// - 유사한 예) Cloneable 인터페이스
+public class Board implements Serializable, SequenceNo {
 
     private static int seqNo;
 
@@ -16,7 +21,7 @@ public class Board implements Serializable {
     private Date createdDate;
     private int viewCount;
 
-    public static void setSeqNo(int no) {
+    public static void initSeqNo(int no) {
         seqNo = no;
     }
 
@@ -32,7 +37,7 @@ public class Board implements Serializable {
         return ++seqNo;
     }
 
-    public String toCsvString(){
+    public String toCsvString() {
         return new StringBuilder()
                 .append(no).append(",")
                 .append(title).append(",")
@@ -42,7 +47,7 @@ public class Board implements Serializable {
                 .toString();
     }
 
-    public static Board valueOf(String csv){
+    public static Board valueOf(String csv) {
         String[] values = csv.split(",");
         Board board = new Board();
         board.setNo(Integer.valueOf(values[0]));
@@ -82,6 +87,7 @@ public class Board implements Serializable {
         return Objects.hashCode(no);
     }
 
+    @Override
     public int getNo() {
         return no;
     }
