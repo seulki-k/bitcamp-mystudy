@@ -27,6 +27,7 @@ import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -152,7 +153,6 @@ public class App {
                     break;
                 }
             }
-
 
         } catch (Exception e) {
             System.out.println(filename + " 파일 로딩 중 오류 발생!");
