@@ -6,13 +6,19 @@ import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
 
 import java.util.List;
+import java.util.Map;
 
 public class ProjectAddCommand implements Command {
-    private ProjectMemberHandler memberHandler;
-    private List<Project> projectList;
 
-    public ProjectAddCommand(List<Project> projectList,ProjectMemberHandler memberHandler) {
-        this.projectList = projectList;
+    private Map<Integer, Project> projectMap;
+    private List<Integer> projectNoList;
+    private ProjectMemberHandler memberHandler;
+
+
+
+    public ProjectAddCommand(Map<Integer, Project> projectMap, List<Integer> projectNoList, ProjectMemberHandler memberHandler) {
+        this.projectMap =projectMap;
+        this.projectNoList = projectNoList;
         this.memberHandler = memberHandler;
     }
 
@@ -32,7 +38,8 @@ public class ProjectAddCommand implements Command {
 
         project.setNo(Project.getNextSeqNo());
 
-        projectList.add(project);
+        projectMap.put(project.getNo(), project);
+        projectNoList.add(project.getNo());
 
         System.out.println("등록했습니다.");
     }

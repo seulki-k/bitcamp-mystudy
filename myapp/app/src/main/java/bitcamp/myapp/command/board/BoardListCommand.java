@@ -6,21 +6,24 @@ import bitcamp.util.Prompt;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class BoardListCommand implements Command {
 
-    private List<Board> boardList;
+    private List<Integer> boardList;
+    private Map<Integer, Board> boardMap;
 
-
-    public BoardListCommand(List<Board> list) {
-        this.boardList = list;
+    public BoardListCommand(Map<Integer,Board> boardMap, List<Integer> boardNoList) {
+        this.boardMap = boardMap;
+        this.boardList = boardNoList;
     }
 
     @Override
     public void execute(String menuName) {
 
         System.out.println("번호 제목 작성일 조회수");
-        for (Board board : boardList) {
+        for (Integer no : boardList) {
+            Board board = boardMap.get(no);
             System.out.printf("%d %s %tY-%3$tm-%3$td %d\n",
                     board.getNo(), board.getTitle(), board.getCreatedDate(), board.getViewCount());
         }
