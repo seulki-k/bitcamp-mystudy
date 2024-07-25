@@ -37,15 +37,6 @@ public class Board implements Serializable, SequenceNo {
         return ++seqNo;
     }
 
-    public String toCsvString() {
-        return new StringBuilder()
-                .append(no).append(",")
-                .append(title).append(",")
-                .append(content).append(",")
-                .append(createdDate.getTime()).append(",")
-                .append(viewCount)
-                .toString();
-    }
 
     public static Board valueOf(String csv) {
         String[] values = csv.split(",");

@@ -1,6 +1,7 @@
 package bitcamp.myapp.command.board;
 
 import bitcamp.myapp.command.Command;
+import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
@@ -11,12 +12,10 @@ import java.util.Map;
 
 public class BoardAddCommand implements Command {
 
-    private List<Integer> boardList;
-    private Map<Integer, Board> boardMap;
+    private BoardDao boardDao;
 
-    public BoardAddCommand(Map<Integer,Board> boardMap, List<Integer> boardNoList) {
-        this.boardMap = boardMap;
-        this.boardList = boardNoList;
+    public BoardAddCommand(BoardDao boardDao) {
+        this.boardDao = boardDao;
     }
 
     @Override
@@ -26,9 +25,13 @@ public class BoardAddCommand implements Command {
         board.setTitle(Prompt.input("제목?"));
         board.setContent(Prompt.input("내용?"));
         board.setCreatedDate(new Date());
-        board.setNo(Board.getNextSeqNo());
-        boardMap.put(board.getNo(), board);
-        boardList.add(board.getNo());
+
+
+        try {
+            boardDao.insert(board);
+        } catch (Exception e) {
+            System.out.println("게시판 등록 중 오류 발생!");
+        }
     }
 
 }

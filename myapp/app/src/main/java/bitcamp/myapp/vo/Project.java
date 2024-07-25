@@ -64,26 +64,6 @@ public class Project implements Serializable, SequenceNo {
         return project;
     }
 
-    public String toCsvString() {
-
-        StringBuilder membersBuilder = new StringBuilder();
-        for (User member : members) {
-            if (membersBuilder.length() > 0) {
-                membersBuilder.append("#");
-            }
-            membersBuilder.append(member.toCsvString().replaceAll(",", "_"));
-        }
-
-        return new StringBuilder()
-                .append(no).append(",")
-                .append(title).append(",")
-                .append(description).append(",")
-                .append(startDate).append(",")
-                .append(endDate).append(",")
-                .append(membersBuilder.toString())
-                .toString();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
