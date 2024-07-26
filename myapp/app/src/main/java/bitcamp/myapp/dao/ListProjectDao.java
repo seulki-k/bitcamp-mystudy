@@ -2,17 +2,18 @@ package bitcamp.myapp.dao;
 
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class MapProjectDao implements ProjectDao {
+public class ListProjectDao implements ProjectDao {
 
     private static final String DEFAULT_DATANAME = "projects";
     private int seqNo;
@@ -21,11 +22,11 @@ public class MapProjectDao implements ProjectDao {
     private String path;
     private String dataName;
 
-    public MapProjectDao(String path) {
+    public ListProjectDao(String path) {
         this(path, DEFAULT_DATANAME);
     }
 
-    public MapProjectDao(String path, String dataName) {
+    public ListProjectDao(String path, String dataName) {
         this.path = path;
         this.dataName = dataName;
 
@@ -53,14 +54,14 @@ public class MapProjectDao implements ProjectDao {
                     projectNoList.add(project.getNo());
 
                 } catch (Exception e) {
-                    System.out.printf("%s 번 프로젝트 데이터 형식이 맞지 않습니다.\n", row.getCell(0).getStringCellValue());
+                    System.out.printf("%s 번 게시글의 데이터 형식이 맞지 않습니다.\n", row.getCell(0).getStringCellValue());
                 }
             }
 
             seqNo = projectNoList.getLast();
 
         } catch (Exception e) {
-            System.out.println("프로젝트 데이터 로딩 중 오류 발생!");
+            System.out.println("게시글 데이터 로딩 중 오류 발생!");
             e.printStackTrace();
         }
     }
