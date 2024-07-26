@@ -18,8 +18,7 @@ public class ListBoardDao implements BoardDao{
 
     private static final String DEFAULT_DATANAME = "boards";
     private int seqNo;
-    private Map<Integer, Board> boardMap = new HashMap<>();
-    private List<Integer> boardNoList = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
     private String path;
     private String dataName = "users";
 
@@ -48,15 +47,14 @@ public class ListBoardDao implements BoardDao{
                     board.setCreatedDate(formatter.parse(row.getCell(3).getStringCellValue()));
                     board.setViewCount(Integer.parseInt(row.getCell(4).getStringCellValue()));
 
-                    boardMap.put(board.getNo(), board);
-                    boardNoList.add(board.getNo());
+                    boardList.add(board);
 
                 } catch (Exception e) {
                     System.out.printf("%s 번 게시글의 데이터 형식이 맞지 않습니다.\n", row.getCell(0).getStringCellValue());
                     e.printStackTrace();
                 }
             }
-            seqNo = boardNoList.getLast();
+            seqNo = boardList.getLast().getNo();
         } catch (Exception e) {
             System.out.println("게시글 데이터 로딩 중 오류 발생");
         }
@@ -83,8 +81,7 @@ public class ListBoardDao implements BoardDao{
 
             // 데이터 저장
             int rowNo = 1;
-            for (Integer boardNo : boardNoList) {
-                Board board = boardMap.get(boardNo);
+            for (Board board : boardList) {
 
                 Row dataRow = sheet.createRow(rowNo++);
                 dataRow.createCell(0).setCellValue(String.valueOf(board.getNo()));
@@ -109,40 +106,43 @@ public class ListBoardDao implements BoardDao{
     @Override
     public boolean insert(Board board) throws Exception {
         board.setNo(++seqNo);
-        boardMap.put(board.getNo(), board);
-        boardNoList.add(board.getNo());
+        boardList.add(board);
         return true;
     }
 
     @Override
     public List<Board> list() throws Exception {
-        ArrayList<Board> boards = new ArrayList<>();
-        for (Integer boardNo : boardNoList) {
-            boards.add(boardMap.get(boardNo));
-        }
-        return boards;
+        return boardList;
     }
 
     @Override
     public Board findBy(int no) throws Exception {
-        return boardMap.get(no);
+        for (Board board : boardList) {
+            if (board.getNo() == no) {
+                return board;
+            }
+        }
+        return null;
     }
 
     @Override
     public boolean update(Board board) throws Exception {
-        if (!boardMap.containsKey(board.getNo())) {
+        int index = boardList.indexOf(board);
+        if (index == -1) {
+
             return false;
         }
-        boardMap.put(board.getNo(),board);
+        boardList.set(index, board);
         return true;
     }
 
     @Override
     public boolean delete(int no) throws Exception {
-        if(boardMap.remove(Integer.valueOf(no)) == null){
+        Board board = findBy(no);
+        if (board == null) {
             return false;
         }
-        boardNoList.remove(Integer.valueOf(no));
+        boardList.remove(board);
         return true;
     }
 }
