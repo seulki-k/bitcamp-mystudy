@@ -2,14 +2,13 @@ package bitcamp.myapp.dao;
 
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ListProjectDao implements ProjectDao {
 
@@ -19,14 +18,13 @@ public class ListProjectDao implements ProjectDao {
     private String path;
     private String dataName;
 
-    public ListProjectDao(String path,UserDao userDao) {
-        this(path, DEFAULT_DATANAME,userDao);
+    public ListProjectDao(String path, UserDao userDao) {
+        this(path, DEFAULT_DATANAME, userDao);
     }
 
     public ListProjectDao(String path, String dataName, UserDao userDao) {
         this.path = path;
         this.dataName = dataName;
-
 
         try (XSSFWorkbook workbook = new XSSFWorkbook(path)) {
             XSSFSheet sheet = workbook.getSheet(dataName);
@@ -43,7 +41,7 @@ public class ListProjectDao implements ProjectDao {
 
                     String[] members = row.getCell(5).getStringCellValue().split(",");
                     for (String memberNo : members) {
-                        User member = userDao.findBy(Integer.parseInt(memberNo)); //userMap.get(Integer.valueOf(memberNo));
+                        User member = userDao.findBy(Integer.parseInt(memberNo));
                         if (member != null) {
                             project.getMembers().add(member);
                         }
@@ -120,7 +118,7 @@ public class ListProjectDao implements ProjectDao {
 
     @Override
     public List<Project> list() throws Exception {
-        return projectList;
+        return projectList.stream().toList();
     }
 
     @Override
@@ -139,16 +137,18 @@ public class ListProjectDao implements ProjectDao {
         if (index == -1) {
             return false;
         }
+
         projectList.set(index, project);
         return true;
     }
 
     @Override
     public boolean delete(int no) throws Exception {
-        Project project = findBy(no);
-        if (project == null) {
+        int index = projectList.indexOf(new Project(no));
+        if (index == -1) {
             return false;
         }
+        projectList.remove(index);
         return true;
     }
 }

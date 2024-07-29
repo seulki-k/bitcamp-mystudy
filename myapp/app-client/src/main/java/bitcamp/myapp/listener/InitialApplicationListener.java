@@ -10,6 +10,8 @@ import bitcamp.myapp.command.board.*;
 import bitcamp.myapp.command.project.*;
 import bitcamp.myapp.command.user.*;
 import bitcamp.myapp.dao.*;
+import bitcamp.myapp.dao.stub.BoardDaoStub;
+import bitcamp.myapp.dao.stub.ProjectDaoStub;
 import bitcamp.myapp.dao.stub.UserDaoStub;
 
 import java.io.ObjectInputStream;
@@ -28,8 +30,8 @@ public class InitialApplicationListener implements ApplicationListener {
         ObjectOutputStream out = (ObjectOutputStream) ctx.getAttribute("outputStream");
 
         userDao = new UserDaoStub(in, out, "users");
-        boardDao = new ListBoardDao("data.xlsx");
-        projectDao = new ListProjectDao("data.xlsx", userDao);
+        boardDao = new BoardDaoStub(in,out,"boards");
+        projectDao = new ProjectDaoStub(in,out,"projects");
         MenuGroup mainMenu = ctx.getMainMenu();
 
         MenuGroup userMenu = new MenuGroup("회원");
