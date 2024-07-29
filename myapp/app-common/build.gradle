@@ -1,5 +1,5 @@
 plugins {
-    id 'application'
+    id 'java-library'
 }
 
 repositories {
@@ -7,11 +7,8 @@ repositories {
 }
 
 dependencies {
-    implementation project(':app-common')
-
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'org.apache.poi:poi-ooxml:5.3.0'
-
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation libs.guava
@@ -23,10 +20,12 @@ java {
     }
 }
 
-application {
-    mainClass = 'bitcamp.myapp.ServerApp'
-}
-
 tasks.named('test') {
+
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8" //소스 파일이 UTF-8 로 인코딩 되어 있음을 알려준다.
+    //Gradle에서 컴파일 할 때다음과 같이 옵션을 추가한다.
+    // $Javac -encoding UTL-8 ...
+}

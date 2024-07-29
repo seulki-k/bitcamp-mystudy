@@ -4,9 +4,7 @@ import bitcamp.myapp.vo.User;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -103,7 +101,7 @@ public class ListUserDao implements UserDao {
 
     @Override
     public List<User> list() throws Exception {
-        return userList;
+        return userList.stream().toList();
     }
 
     @Override

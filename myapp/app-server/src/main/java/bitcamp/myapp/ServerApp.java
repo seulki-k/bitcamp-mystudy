@@ -5,8 +5,8 @@ import bitcamp.listener.ApplicationListener;
 import bitcamp.myapp.dao.skel.UserDaoSkel;
 import bitcamp.myapp.listener.InitialApplicationListener;
 import bitcamp.util.Prompt;
-
-import java.io.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,7 +20,9 @@ public class ServerApp {
     public static void main(String[] args) {
         ServerApp app = new ServerApp();
 
+        // 애플리케이션이 시작되거나 종료될 때 알림 받을 객체의 연락처를 등록한다.
         app.addApplicationListener(new InitialApplicationListener());
+
         app.execute();
     }
 
@@ -28,13 +30,13 @@ public class ServerApp {
         listeners.add(listener);
     }
 
-    private void removeApplication(ApplicationListener listener) {
+    private void removeApplicationListener(ApplicationListener listener) {
         listeners.remove(listener);
     }
 
-
     void execute() {
-        //애플리케이션이 시작될 때 리스너에게 알린다.
+
+        // 애플리케이션이 시작될 때 리스너에게 알린다.
         for (ApplicationListener listener : listeners) {
             try {
                 listener.onStart(appCtx);
@@ -43,46 +45,49 @@ public class ServerApp {
             }
         }
 
-        //서버에서 사용할 Dao Skeletone 객체 준비
-        UserDaoSkel userDaoSkel= (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
+        // 서버에서 사용할 Dao Skeleton 객체 준비
+        UserDaoSkel userDaoSkel = (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
 
+        System.out.println("서버 프로젝트 관리 시스템 시작!");
 
-
-        System.out.println("[서버 프로젝트 관리 시스템 시작!]");
-
-        //(포트 번호(통신 식별번 호),대기열 크기(client 최대 접속 수)) 대기열 안넣으면 Default 값 선택
-        try (ServerSocket serverSocket = new ServerSocket(8888);){
+        try (ServerSocket serverSocket = new ServerSocket(8888)) {
             System.out.println("서버 실행 중...");
 
-            try(Socket socket = serverSocket.accept();) {
+            try (Socket socket = serverSocket.accept()) {
                 System.out.println("클라이언트와 연결되었음!");
 
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
-                String dataName = in.readUTF();
+                while (true) {
+                    String dataName = in.readUTF();
 
-                switch (dataName) {
-                    case "users" :
-                        userDaoSkel.service(in,out);
+                    if (dataName.equals("quit")) {
                         break;
-                    case "projects":
-                        break;
-                    case "boards":
-                        break;
-                    default:
+                    }
+                    System.out.println(dataName + "데이터 요청 처리합니다");
 
+                    switch (dataName) {
+                        case "users":
+                            userDaoSkel.service(in, out);
+                            break;
+                        case "projects":
+                            break;
+                        case "boards":
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         } catch (Exception e) {
-            System.out.println("통신 중 오류 발생");
+            System.out.println("통신 중 오류 발생!");
             e.printStackTrace();
         }
 
         System.out.println("종료합니다.");
 
-        Prompt.close();
-        //애플리케이션이 종료될 때 리스너에게 알린다.
+        // 애플리케이션이 종료될 때 리스너에게 알린다.
         for (ApplicationListener listener : listeners) {
             try {
                 listener.onShutdown(appCtx);

@@ -10,6 +10,11 @@ import bitcamp.myapp.command.board.*;
 import bitcamp.myapp.command.project.*;
 import bitcamp.myapp.command.user.*;
 import bitcamp.myapp.dao.*;
+import bitcamp.myapp.dao.stub.UserDaoStub;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class InitialApplicationListener implements ApplicationListener {
     UserDao userDao;
@@ -17,12 +22,15 @@ public class InitialApplicationListener implements ApplicationListener {
     BoardDao boardDao;
 
     @Override
-    public void onStart(ApplicationContext ctx) {
-         userDao = new ListUserDao("data.xlsx");
-         boardDao = new ListBoardDao("data.xlsx");
-         projectDao = new ListProjectDao("data.xlsx", userDao);
+    public void onStart(ApplicationContext ctx) throws Exception {
+
+        ObjectInputStream in = (ObjectInputStream) ctx.getAttribute("inputStream");
+        ObjectOutputStream out = (ObjectOutputStream) ctx.getAttribute("outputStream");
+
+        userDao = new UserDaoStub(in, out, "users");
+        boardDao = new ListBoardDao("data.xlsx");
+        projectDao = new ListProjectDao("data.xlsx", userDao);
         MenuGroup mainMenu = ctx.getMainMenu();
-//        MenuGroup mainMenu = new MenuGroup("메인");
 
         MenuGroup userMenu = new MenuGroup("회원");
         userMenu.add(new MenuItem("등록", new UserAddCommand(userDao)));
@@ -54,30 +62,6 @@ public class InitialApplicationListener implements ApplicationListener {
         mainMenu.add(new MenuItem("명령내역", new HistoryCommand()));
 
         mainMenu.setExitMenuTitle("종료");
-    }@Override
-    public void onShutdown(ApplicationContext ctx) {
-        try {
-            ((ListUserDao) userDao).save();
-        } catch (Exception e) {
-            System.out.println("회원 데이터 저장 중 오류 발생!");
-            e.printStackTrace();
-            System.out.println();
-        }
-
-        try {
-            ((ListBoardDao) boardDao).save();
-        } catch (Exception e) {
-            System.out.println("게시글 데이터 저장 중 오류 발생!");
-            e.printStackTrace();
-            System.out.println();
-        }
-
-        try {
-            ((ListProjectDao) projectDao).save();
-        } catch (Exception e) {
-            System.out.println("프로젝트 데이터 저장 중 오류 발생!");
-            e.printStackTrace();
-            System.out.println();
-        }
     }
+
 }

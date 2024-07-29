@@ -2,13 +2,6 @@ package bitcamp.myapp.listener;
 
 import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
-import bitcamp.menu.MenuGroup;
-import bitcamp.menu.MenuItem;
-import bitcamp.myapp.command.HelpCommand;
-import bitcamp.myapp.command.HistoryCommand;
-import bitcamp.myapp.command.board.*;
-import bitcamp.myapp.command.project.*;
-import bitcamp.myapp.command.user.*;
 import bitcamp.myapp.dao.*;
 import bitcamp.myapp.dao.skel.UserDaoSkel;
 
@@ -18,7 +11,7 @@ public class InitialApplicationListener implements ApplicationListener {
     BoardDao boardDao;
 
     @Override
-    public void onStart(ApplicationContext ctx) {
+    public void onStart(ApplicationContext ctx) throws Exception{
         userDao = new ListUserDao("data.xlsx");
         boardDao = new ListBoardDao("data.xlsx");
         projectDao = new ListProjectDao("data.xlsx", userDao);
@@ -31,7 +24,7 @@ public class InitialApplicationListener implements ApplicationListener {
     }
 
     @Override
-    public void onShutdown(ApplicationContext ctx) {
+    public void onShutdown(ApplicationContext ctx) throws Exception{
         try {
             ((ListUserDao) userDao).save();
         } catch (Exception e) {

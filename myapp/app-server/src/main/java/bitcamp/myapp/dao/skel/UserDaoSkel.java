@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
-import static bitcamp.myapp.dao.skel.ResponseStatus.*;
+import static bitcamp.net.ResponseStatus.*;
 
 public class UserDaoSkel {
 
@@ -40,7 +40,7 @@ public class UserDaoSkel {
                     out.writeUTF(SUCCESS);
                     out.writeObject(user);
                 } else {
-                    out.writeUTF(FAILUERE);
+                    out.writeUTF(FAILURE);
                 }
                 break;
             case "update":
@@ -48,7 +48,7 @@ public class UserDaoSkel {
                 if (userDao.update(user)) {
                     out.writeUTF(SUCCESS);
                 } else {
-                    out.writeUTF(FAILUERE);
+                    out.writeUTF(FAILURE);
                 }
                 break;
             case "delete":
@@ -56,13 +56,13 @@ public class UserDaoSkel {
                 if ((userDao.delete(no))) {
                     out.writeUTF(SUCCESS);
                 } else {
-                    out.writeUTF(FAILUERE);
+                    out.writeUTF(FAILURE);
                 }
                 break;
             default:
                 out.writeUTF(ERROR);
                 out.writeUTF("무효한 명령입니다.");
         }
-
+            out.flush();
     }
 }
