@@ -12,7 +12,7 @@ public class Prompt {
   public static String input(String format, Object... args) {
     String promptTitle = String.format(format + " ", args);
     System.out.print(promptTitle);
-    
+
     String input = keyboardScanner.nextLine();
     if (format.endsWith(">")) {
       inputQueue.offer(promptTitle + input); // 최근 명령어를 큐의 맨 뒤에 넣는다.
@@ -32,10 +32,10 @@ public class Prompt {
   }
 
   public static void printHistory() {
-    System.out.println("-------[명령 내역]---------");
+    System.out.println("[명령 내역]----------------");
     for (String log : inputQueue) {
       System.out.println(log);
     }
-    System.out.println("------------끝------------ ");
+    System.out.println("------------------------ 끝");
   }
 }

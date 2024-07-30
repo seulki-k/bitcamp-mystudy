@@ -7,31 +7,31 @@ import bitcamp.util.Prompt;
 
 public class BoardDeleteCommand implements Command {
 
-    private BoardDao boardDao;
+  private BoardDao boardDao;
 
-    public BoardDeleteCommand(BoardDao boardDao) {
-        this.boardDao = boardDao;
+  public BoardDeleteCommand(BoardDao boardDao) {
+    this.boardDao = boardDao;
+  }
+
+  @Override
+  public void execute(String menuName) {
+    System.out.printf("[%s]\n", menuName);
+    int boardNo = Prompt.inputInt("게시글 번호?");
+
+    try {
+      Board deletedBoard = boardDao.findBy(boardNo);
+      if (deletedBoard == null) {
+        System.out.println("없는 게시글입니다.");
+        return;
+      }
+
+      boardDao.delete(boardNo);
+      System.out.printf("'%s'번 게시글을 삭제 했습니다.\n", deletedBoard.getNo());
+
+    } catch (Exception e) {
+      System.out.println("삭제 중 오류 발생!");
     }
+  }
 
-    @Override
-    public void execute(String menuName) {
 
-        int boardNo = Prompt.inputInt("게시글 번호?");
-
-        try {
-            Board deletedBoard = boardDao.findBy(boardNo);
-            if (deletedBoard == null) {
-                System.out.println("없는 게시글입니다.");
-                return;
-            }
-            if (boardDao.delete(boardNo)) {
-                System.out.printf("%d번 게시글을 삭제 했습니다.\n", deletedBoard.getNo());
-            } else {
-                System.out.println("삭제 실패입니다.");
-            }
-        } catch (Exception e) {
-            System.out.println("데이터 삭제 중 오류 발생!");
-        }
-
-    }
 }

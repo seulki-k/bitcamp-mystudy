@@ -1,45 +1,24 @@
-# 17. 인터페이스를 이용한 객체 사용 규칙 정의: 목록을 다루는 규칙
+# 37. 애플리케이션 간에 데이터 공유하기 : Client/Server 아키텍처로 전환
 
 ## 학습목표
 
-- 인터페이스를 이용하여 객체 사용 규칙을 정의하고 사용할 수 있다.
-- 패키지를 이용하여 클래스를 분류할 수 있다.
-- equals()의 용도를 이해하고 재정의하여 사용할 수 있다.
+- 네트워킹 API 를 이용하여 애플리케이션 간에 통신을 수행할 수 있다.
+- 클라이언트/서버 아키텍처의 특징을 설명하고 구현할 수 있다.
+- GoF의 Proxy 설계 패턴을 이해하고 적용할 수 있다.
 
 ## 요구사항
 
-- ArrayList와 LinkedList의 사용 규칙을 통일하기
-- 목록을 다루는 것과 관련된 클래스를 다른 프로젝트에서 재사용하기 쉽게 분류하기
-- UserList, ProjectList, BoardList 클래스를 제거하고 ArrayList, LinkedList를 직접 사용하기
+- 애플리케이션 간에 데이터를 공유할 수 있도록 데이터 처리 기능을 별도의 애플리케이션으로 분리하라.
+- 클라이언트/서버 구조로 애플리케이션을 변경하라.
+- 클라이언트/서버의 공통 코드는 별도의 프로젝트로 분리하라.
 
 ## 실행 결과
 
 - 이전과 같다.
 
-
 ## 작업
 
-- 목록을 다루는 객체 사용 규칙을 정의한다.
-  - List 인터페이스 추가 
-- ArrayList와 LinkedList 클래스를 List 규칙에 따라 정의한다.
-  - ArrayList와 LinkedList 변경
-- ArrayList, LinkedList, List 클래스를 별도의 패키지로 분류한다.
-  - 관련 클래스 이동
-- 리팩토링
-  - UserList, ProjectList, BoardList 에서 데이터를 찾는 기능을 equals로 대체 
-  - UserList, ProjectList, BoardList 제거
-- equals() 재정의
-  - Board, Project, User 변경
-  - UserCommand, BoardCommand, ProjectCommand 변경
-
+- 메인 프로젝트 app을 app-client와 app-server로 나눈다.
+- 공통 코드를 별도의 라이브러리 프로젝트(app-common)로 나눈다. 
+  
 ## 소스 파일
-
-- List.java
-- ArrayList.java
-- LinkedList.java
-- UserCommand.java
-- ProjectCommand.java
-- BoardCommand.java
-- User.java
-- Project.java
-- Board.java
