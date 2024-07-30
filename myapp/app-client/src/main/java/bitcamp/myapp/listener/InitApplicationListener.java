@@ -40,12 +40,12 @@ public class InitApplicationListener implements ApplicationListener {
   @Override
   public void onStart(ApplicationContext ctx) throws Exception {
 
-    ObjectInputStream in = (ObjectInputStream) ctx.getAttribute("inputStream");
-    ObjectOutputStream out = (ObjectOutputStream) ctx.getAttribute("outputStream");
+    String host = (String) ctx.getAttribute("host");
+    int port = (int) ctx.getAttribute("port");
 
-    userDao = new UserDaoStub(in, out, "users");
-    boardDao = new BoardDaoStub(in, out, "boards");
-    projectDao = new ProjectDaoStub(in, out, "projects");
+    userDao = new UserDaoStub(host, port, "users");
+    boardDao = new BoardDaoStub(host, port, "boards");
+    projectDao = new ProjectDaoStub(host, port, "projects");
 
     MenuGroup mainMenu = ctx.getMainMenu();
 

@@ -6,10 +6,14 @@ import bitcamp.myapp.dao.skel.BoardDaoSkel;
 import bitcamp.myapp.dao.skel.ProjectDaoSkel;
 import bitcamp.myapp.dao.skel.UserDaoSkel;
 import bitcamp.myapp.listener.InitApplicationListener;
+import bitcamp.util.Prompt;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,33 +85,37 @@ public class ServerApp {
     }
   }
 
-  void processRequest(Socket s) throws Exception {
+  void processRequest(Socket s)  {
+    String remoteHost = null;
+    int port = 0;
+
     try (Socket socket = s) {
-      System.out.println("클라이언트와 연결되었음!");
+
+      InetSocketAddress addr = (InetSocketAddress) s.getRemoteSocketAddress();
+      remoteHost = addr.getHostString();
+      port =addr.getPort();
+
+      System.out.printf("%s : %d 클라이언트와 연결되었음!\n", remoteHost,port);
 
       ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
       ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
-      while (true) {
+      String dataName = in.readUTF();
 
-        String dataName = in.readUTF();
-        if (dataName.equals("quit")) {
+      switch (dataName) {
+        case "users":
+          userDaoSkel.service(in, out);
           break;
-        }
-
-        switch (dataName) {
-          case "users":
-            userDaoSkel.service(in, out);
-            break;
-          case "projects":
-            projectDaoSkel.service(in, out);
-            break;
-          case "boards":
-            boardDaoSkel.service(in, out);
-            break;
-          default:
-        }
+        case "projects":
+          projectDaoSkel.service(in, out);
+          break;
+        case "boards":
+          boardDaoSkel.service(in, out);
+          break;
+        default:
       }
+    } catch (Exception e) {
+      System.out.printf("%s : %d 클라이언트와 와 요청 중 오류 발생!\n", remoteHost,port);
     }
   }
 }
