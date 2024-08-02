@@ -16,8 +16,14 @@ public class Receiver3 {
     ServerSocket serverSocket = new ServerSocket(8888);
     Socket socket = serverSocket.accept();
 
+    ServerSocket serverSocket2 = new ServerSocket(8888);
+    Socket socket2 = serverSocket.accept();
+
     PrintStream out = new PrintStream(socket.getOutputStream());
     Scanner in = new Scanner(socket.getInputStream());
+
+    PrintStream out2 = new PrintStream(socket.getOutputStream());
+    Scanner in2 = new Scanner(socket.getInputStream());
 
     while (true) {
       // 클라이언트가 보낸 문자열을 수신한다.
@@ -29,8 +35,9 @@ public class Receiver3 {
       String input = keyScan.nextLine();
       out.println(input);
 
-      if (str.equals("quit"))
+      if (str.equals("quit")) {
         break;
+      }
     }
 
     in.close();
