@@ -5,6 +5,9 @@ import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 import bitcamp.util.Prompt;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 public class ProjectUpdateCommand implements Command {
 
   private ProjectDao projectDao;
@@ -27,11 +30,11 @@ public class ProjectUpdateCommand implements Command {
         System.out.println("없는 프로젝트입니다.");
         return;
       }
-
       project.setTitle(Prompt.input("프로젝트명(%s)?", project.getTitle()));
       project.setDescription(Prompt.input("설명(%s)?", project.getDescription()));
-      project.setStartDate(Prompt.input("시작일(%s)?", project.getStartDate()));
-      project.setEndDate(Prompt.input("종료일(%s)?", project.getEndDate()));
+      project.setStartDate(Prompt.inputDate("시작일(%s)?(ex - 2024-01-24)", project.getStartDate()));
+      project.setEndDate(Prompt.inputDate("종료일(%s)?(ex - 2024-03-23)", project.getEndDate()));
+
 
       System.out.println("팀원:");
       memberHandler.deleteMembers(project);

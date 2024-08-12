@@ -6,13 +6,15 @@ import java.util.List;
 
 public interface BoardDao {
 
-  boolean insert(Board board) throws Exception;
+    boolean insert(Board board) throws Exception;
 
-  List<Board> list() throws Exception;
+    List<Board> list() throws Exception;
 
-  Board findBy(int no) throws Exception;
+    Board findBy(int no) throws Exception;
 
-  boolean update(Board board) throws Exception;
+    boolean update(Board board) throws Exception;
 
-  boolean delete(int no) throws Exception;
+    boolean delete(int no) throws Exception;
+
+    void updateViewCount(int boardNo, int count) throws Exception;
 }
