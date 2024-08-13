@@ -23,7 +23,13 @@ insert into myapp_users (user_id, name,email,pwd)  values
 (7,'제목 7','내용');
 
 
-insert into myapp_projects (project_id, title, description, start_date, end_date,members) values
-(101,'프로젝트1', '설명', '2024-01-01','2024-02-15','1,2,5'),
-(102,'프로젝트2', '설명', '2024-02-01','2024-03-15','5,6,9'),
-(103,'프로젝트3', '설명', '2024-03-01','2024-04-15','4,7,9');
+insert into myapp_projects (project_id, title, description, start_date, end_date) values
+(101,'프로젝트1', '설명', '2024-01-01','2024-02-15'),
+(102,'프로젝트2', '설명', '2024-02-01','2024-03-15'),
+(103,'프로젝트3', '설명', '2024-03-01','2024-04-15');
+
+--프로젝트 멤버
+insert into myapp_project_members (project_id, user_id) values
+    (101, 1), (101, 2), (101, 5),
+    (102, 5), (102, 6), (102, 9),
+    (103, 4), (103, 7), (103, 9);

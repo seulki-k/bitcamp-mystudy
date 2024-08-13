@@ -28,15 +28,12 @@ import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.dao.mysql.BoardDaoImpl;
 import bitcamp.myapp.dao.mysql.ProjectDaoImpl;
 import bitcamp.myapp.dao.mysql.UserDaoImpl;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class InitApplicationListener implements ApplicationListener {
 
   private Connection con;
-
   private UserDao userDao;
   private BoardDao boardDao;
   private ProjectDao projectDao;
@@ -48,13 +45,13 @@ public class InitApplicationListener implements ApplicationListener {
     String username = (String) ctx.getAttribute("username");
     String password = (String) ctx.getAttribute("password");
 
-    // 1) JDBC Connection 객체 준비
+    // JDBC Connection 객체 준비
     // => DBMS에 연결
     con = DriverManager.getConnection(url, username, password);
 
     userDao = new UserDaoImpl(con);
     boardDao = new BoardDaoImpl(con);
-    projectDao = new ProjectDaoImpl(con,userDao);
+    projectDao = new ProjectDaoImpl(con);
 
     MenuGroup mainMenu = ctx.getMainMenu();
 
@@ -69,7 +66,7 @@ public class InitApplicationListener implements ApplicationListener {
     MenuGroup projectMenu = new MenuGroup("프로젝트");
     ProjectMemberHandler memberHandler = new ProjectMemberHandler(userDao);
     projectMenu.add(
-        new MenuItem("등록", new ProjectAddCommand(projectDao, memberHandler)));
+            new MenuItem("등록", new ProjectAddCommand(projectDao, memberHandler)));
     projectMenu.add(new MenuItem("목록", new ProjectListCommand(projectDao)));
     projectMenu.add(new MenuItem("조회", new ProjectViewCommand(projectDao)));
     projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectDao, memberHandler)));
@@ -95,7 +92,7 @@ public class InitApplicationListener implements ApplicationListener {
     try {
       con.close();
     } catch (Exception e) {
-      //DMBS 연결을 끊는 중에 오류가 발생하면 그냥 무시한다.
+      // DBMS에 연결을 끊는 중에 오류가 발생하면 그냥 무시한다!
     }
   }
 }

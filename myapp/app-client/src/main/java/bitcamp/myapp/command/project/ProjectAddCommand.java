@@ -3,6 +3,7 @@ package bitcamp.myapp.command.project;
 import bitcamp.command.Command;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
+import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
 
 public class ProjectAddCommand implements Command {
@@ -30,11 +31,13 @@ public class ProjectAddCommand implements Command {
       memberHandler.addMembers(project);
 
       projectDao.insert(project);
+      projectDao.insertMembers(project.getNo(),project.getMembers());
 
       System.out.println("등록했습니다.");
 
     } catch (Exception e) {
       System.out.println("등록 중 오류 발생!");
+      e.printStackTrace();
     }
   }
 }

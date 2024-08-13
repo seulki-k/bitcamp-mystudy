@@ -54,7 +54,7 @@ public class BoardDaoImpl implements BoardDao {
                 board.setNo(rs.getInt("board_id"));
                 board.setTitle(rs.getString("title"));
                 board.setContent(rs.getString("content"));
-                board.setCreatedDate(rs.getDate("created_date"));
+                board.setCreatedDate(rs.getTimestamp("created_date"));
                 board.setViewCount(rs.getInt("view_count"));
                 return board;
             }
