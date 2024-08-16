@@ -11,6 +11,16 @@ public class Board implements Serializable {
   private int no;
   private String title;
   private String content;
+  private User writer;
+
+  public User getWriter() {
+    return writer;
+  }
+
+  public void setWriter(User writer) {
+    this.writer = writer;
+  }
+
   private Date createdDate;
   private int viewCount;
 
