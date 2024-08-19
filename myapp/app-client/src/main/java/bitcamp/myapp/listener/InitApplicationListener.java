@@ -1,5 +1,6 @@
 package bitcamp.myapp.listener;
 
+import bitcamp.bitbatis.SqlSession;
 import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
 import bitcamp.menu.MenuGroup;
@@ -28,7 +29,6 @@ import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.dao.mysql.BoardDaoImpl;
 import bitcamp.myapp.dao.mysql.ProjectDaoImpl;
 import bitcamp.myapp.dao.mysql.UserDaoImpl;
-
 import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,14 +36,13 @@ import java.util.Properties;
 
 public class InitApplicationListener implements ApplicationListener {
 
-  private Connection con;
+  Connection con;
 
   @Override
   public boolean onStart(ApplicationContext ctx) throws Exception {
 
     Properties props = new Properties();
     props.load(new FileReader("app.properties"));
-
 
     String url = props.getProperty("jdbc.url");
     String username = props.getProperty("jdbc.username");
@@ -53,13 +52,15 @@ public class InitApplicationListener implements ApplicationListener {
     // => DBMS에 연결
     con = DriverManager.getConnection(url, username, password);
 
-    UserDao userDao = new UserDaoImpl(con);
-    BoardDao boardDao = new BoardDaoImpl(con);
-    ProjectDao projectDao = new ProjectDaoImpl(con);
+    SqlSession sqlSession = new SqlSession(con);
 
-    ctx.setAttribute("userDao",userDao);
-    ctx.setAttribute("boardDao",boardDao);
-    ctx.setAttribute("projectDao",projectDao);
+    UserDao userDao = new UserDaoImpl(sqlSession);
+    BoardDao boardDao = new BoardDaoImpl(sqlSession);
+    ProjectDao projectDao = new ProjectDaoImpl(sqlSession);
+
+    ctx.setAttribute("userDao", userDao);
+    ctx.setAttribute("boardDao", boardDao);
+    ctx.setAttribute("projectDao", projectDao);
 
     MenuGroup mainMenu = ctx.getMainMenu();
 
@@ -74,19 +75,19 @@ public class InitApplicationListener implements ApplicationListener {
     MenuGroup projectMenu = new MenuGroup("프로젝트");
     ProjectMemberHandler memberHandler = new ProjectMemberHandler(userDao);
     projectMenu.add(
-            new MenuItem("등록", new ProjectAddCommand(projectDao, memberHandler,con)));
+            new MenuItem("등록", new ProjectAddCommand(projectDao, memberHandler, con)));
     projectMenu.add(new MenuItem("목록", new ProjectListCommand(projectDao)));
     projectMenu.add(new MenuItem("조회", new ProjectViewCommand(projectDao)));
-    projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectDao, memberHandler,con)));
-    projectMenu.add(new MenuItem("삭제", new ProjectDeleteCommand(projectDao,con )));
+    projectMenu.add(new MenuItem("변경", new ProjectUpdateCommand(projectDao, memberHandler, con)));
+    projectMenu.add(new MenuItem("삭제", new ProjectDeleteCommand(projectDao, con)));
     mainMenu.add(projectMenu);
 
     MenuGroup boardMenu = new MenuGroup("게시판");
     boardMenu.add(new MenuItem("등록", new BoardAddCommand(boardDao, ctx)));
     boardMenu.add(new MenuItem("목록", new BoardListCommand(boardDao)));
     boardMenu.add(new MenuItem("조회", new BoardViewCommand(boardDao)));
-    boardMenu.add(new MenuItem("변경", new BoardUpdateCommand(boardDao,ctx)));
-    boardMenu.add(new MenuItem("삭제", new BoardDeleteCommand(boardDao,ctx)));
+    boardMenu.add(new MenuItem("변경", new BoardUpdateCommand(boardDao, ctx)));
+    boardMenu.add(new MenuItem("삭제", new BoardDeleteCommand(boardDao, ctx)));
     mainMenu.add(boardMenu);
 
     mainMenu.add(new MenuItem("도움말", new HelpCommand()));
