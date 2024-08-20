@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProjectDao">
+
+    <select id="list" resultType="bitcamp.myapp.vo.Project">
+        select
+        user_id as no,
+        name,
+        email
+        from
+        myapp_users
+        order by
+        user_id asc
+    </select>
+
+    <!-- parameterType으로 변경 -->
+    <insert id="insert" parameterType="bitcamp.myapp.vo.Project">
+        insert into myapp_projects(title,description,start_date,end_date)
+        values (#{title}, #{description}, #{start_date}, #{end_date})
+
+    </insert>
+
+    <select id="findBy" resultType="bitcamp.myapp.vo.Project" parameterType="int">
+        select
+        user_id as no,
+        name,
+        email,
+        tel
+        from
+        myapp_users
+        where
+        user_id=#{okok}
+    </select>
+
+    <insert id="insertMembers" parameterType="map">
+
+    </insert>
+    <select id="getMembers"  parameterType="map">
+
+    </select>
+    <insert id="insertMembers" parameterType="map">
+
+    </insert>
+    <update id="update" parameterType="bitcamp.myapp.vo.Project">
+        update
+        myapp_users set
+        name=#{name},
+        email=#{email},
+        pwd=sha1(#{password}),
+        tel=#{tel}
+        where
+        user_id=#{no}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from myapp_users
+        where
+        user_id=#{ok}
+    </delete>
+
+</mapper>
