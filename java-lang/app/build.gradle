@@ -10,7 +10,17 @@ repositories {
 }
 
 dependencies {
- implementation 'com.drewnoakes:metadata-extractor:2.19.0'
+
+// MariaDB JDBC Driver
+implementation 'org.mariadb.jdbc:mariadb-java-client:3.4.1'
+  // Oracle JDBC Driver
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.15.0.0'
+  // MS(Microsoft)-SQL JDBC Driver
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.8.0.jre11'
+    // MYSQL JDBC Driver
+    implementation 'com.mysql:mysql-connector-j:8.4.0'
+    
+    implementation 'com.drewnoakes:metadata-extractor:2.19.0'
     testImplementation libs.junit.jupiter
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation libs.guava
