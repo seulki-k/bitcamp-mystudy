@@ -4,7 +4,18 @@
         "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <!-- .properties 파일 로딩 -->
-    <properties resource="jdbc.properties"/>
+    <properties resource="config/jdbc.properties"/>
+
+    <!-- 도메인 클래스에 별명 부여하기 -->
+    <typeAliases>
+        <!--
+        <typeAlias type="bitcamp.myapp.vo.User" alias="user"/>
+        <typeAlias type="bitcamp.myapp.vo.Board" alias="board"/>
+        <typeAlias type="bitcamp.myapp.vo.Project" alias="project"/>
+        -->
+        <!-- 패키지로 불러오면 파일명이 별칭이 된다.-->
+        <package name="bitcamp.myapp.vo"/>
+    </typeAliases>
 
     <!-- DBMS 접속 정보 -->
     <environments default="development-local">
@@ -23,9 +34,9 @@
     </environments>
 
     <mappers>
-        <mapper resource="UserDaoMapper.xml"/>
-        <mapper resource="ProjectDaoMapper.xml"/>
-        <mapper resource="BoardDaoMapper.xml"/>
+        <mapper resource="mappers/UserDaoMapper.xml"/>
+        <mapper resource="mappers/ProjectDaoMapper.xml"/>
+        <mapper resource="mappers/BoardDaoMapper.xml"/>
     </mappers>
 </configuration>
 
