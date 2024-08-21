@@ -1,17 +1,17 @@
 
 
-insert into myapp_users (user_id, name,email,pwd)  values
-(1,'admin', 'admin@test.com', sha1('1111')),
- (11,'user1', 'user1@test.com', sha1('1111')),
- (12,'user2', 'user2@test.com', sha1('1111')),
- (13,'user3', 'user3@test.com', sha1('1111')),
- (14,'user4', 'user4@test.com', sha1('1111')),
- (15,'user5', 'user5@test.com', sha1('1111')),
- (16,'user6', 'user6@test.com', sha1('1111')),
- (17,'user7', 'user7@test.com', sha1('1111')),
- (18,'user8', 'user8@test.com', sha1('1111')),
- (19,'user9', 'user9@test.com', sha1('1111')),
- (20,'user10', 'user10@test.com', sha1('1111'));
+insert into myapp_users (user_id, name,email,pwd,tel)  values
+(1,'admin', 'admin@test.com', sha1('1111'),'010'),
+ (11,'user1', 'user1@test.com', sha1('1111'),'010'),
+ (12,'user2', 'user2@test.com', sha1('1111'),'010'),
+ (13,'user3', 'user3@test.com', sha1('1111'),'010'),
+ (14,'user4', 'user4@test.com', sha1('1111'),'010'),
+ (15,'user5', 'user5@test.com', sha1('1111'),'010'),
+ (16,'user6', 'user6@test.com', sha1('1111'),'010'),
+ (17,'user7', 'user7@test.com', sha1('1111'),'010'),
+ (18,'user8', 'user8@test.com', sha1('1111'),'010'),
+ (19,'user9', 'user9@test.com', sha1('1111'),'010'),
+ (20,'user10', 'user10@test.com', sha1('1111'),'010');
 
 
  insert into myapp_boards (board_id, title, content, user_id) values

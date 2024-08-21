@@ -4,60 +4,82 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProjectDao">
 
-    <select id="list" resultType="bitcamp.myapp.vo.Project">
+    <resultMap id="ProjectMap" type="bitcamp.myapp.vo.Project">
+        <id column="project_id" property="no"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="start_date" property="startDate"/>
+        <result column="end_date" property="endDate"/>
+    </resultMap>
+
+    <select id="list" resultMap="ProjectMap">
         select
-        user_id as no,
-        name,
-        email
+        project_id,
+        title,
+        start_date,
+        end_date
         from
-        myapp_users
+        myapp_projects
         order by
-        user_id asc
+        project_id asc
     </select>
 
-    <!-- parameterType으로 변경 -->
-    <insert id="insert" parameterType="bitcamp.myapp.vo.Project">
+    <insert id="insert" parameterType="bitcamp.myapp.vo.Project"
+            useGeneratedKeys="true" keyColumn="project_id" keyProperty="no">
         insert into myapp_projects(title,description,start_date,end_date)
-        values (#{title}, #{description}, #{start_date}, #{end_date})
-
+        values (#{title}, #{description}, #{startDate}, #{endDate})
     </insert>
 
-    <select id="findBy" resultType="bitcamp.myapp.vo.Project" parameterType="int">
+    <select id="findBy" resultMap="ProjectMap" parameterType="int">
         select
-        user_id as no,
-        name,
-        email,
-        tel
+        project_id,
+        title,
+        description,
+        start_date,
+        end_date
         from
-        myapp_users
+        myapp_projects
         where
-        user_id=#{okok}
+        project_id=#{no}
     </select>
 
-    <insert id="insertMembers" parameterType="map">
-
-    </insert>
-    <select id="getMembers"  parameterType="map">
-
-    </select>
-    <insert id="insertMembers" parameterType="map">
-
-    </insert>
     <update id="update" parameterType="bitcamp.myapp.vo.Project">
-        update
-        myapp_users set
-        name=#{name},
-        email=#{email},
-        pwd=sha1(#{password}),
-        tel=#{tel}
-        where
-        user_id=#{no}
+        update myapp_projects set
+        title=#{title},
+        description=#{description},
+        start_date=#{startDate},
+        end_date=#{endDate}
+        where project_id=#{no}
     </update>
 
     <delete id="delete" parameterType="int">
-        delete from myapp_users
-        where
-        user_id=#{ok}
+        delete from myapp_projects
+        where project_id=#{no}
     </delete>
 
+    <insert id="insertMembers" parameterType="map">
+        insert into myapp_project_members(project_id, user_id)
+        values
+        <foreach collection="members" item="member" separator=",">
+            (#{projectNo}, #{member.no})
+        </foreach>
+    </insert>
+
+    <select id="getMembers" resultType="bitcamp.myapp.vo.User" parameterType="int">
+        select
+        pm.user_id as no,
+        u.name
+        from
+        myapp_project_members pm
+        inner join myapp_users u on pm.user_id=u.user_id
+        where
+        pm.project_id=#{no}
+        order by
+        u.name asc
+    </select>
+
+    <delete id="deleteMembers" parameterType="int">
+        delete from myapp_project_members
+        where project_id=#{no}
+    </delete>
 </mapper>

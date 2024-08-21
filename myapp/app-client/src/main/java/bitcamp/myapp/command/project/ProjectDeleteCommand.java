@@ -4,48 +4,41 @@ import bitcamp.command.Command;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 import bitcamp.util.Prompt;
+import org.apache.ibatis.session.SqlSession;
 
 import java.sql.Connection;
 
 public class ProjectDeleteCommand implements Command {
 
-  private ProjectDao projectDao;
-  private Connection con;
+    private ProjectDao projectDao;
+    private SqlSession sqlSession;
 
-  public ProjectDeleteCommand(ProjectDao projectDao, Connection con) {
-    this.projectDao = projectDao;
-    this.con = con;
-  }
-
-  @Override
-  public void execute(String menuName) {
-    System.out.printf("[%s]\n", menuName);
-    int projectNo = Prompt.inputInt("프로젝트 번호?");
-
-    try {
-      Project deletedProject = projectDao.findBy(projectNo);
-      if (deletedProject == null) {
-        System.out.println("없는 프로젝트입니다.");
-        return;
-      }
-    con.setAutoCommit(false);
-      projectDao.deleteMembers(projectNo);
-      projectDao.delete(projectNo);
-      con.commit();
-      System.out.printf("%d번 프로젝트를 삭제 했습니다.\n", deletedProject.getNo());
-
-    } catch (Exception e) {
-      try {
-        con.rollback();
-      } catch (Exception e2) {
-      }
-      System.out.println("삭제 중 오류 발생!");
-    }finally {
-      try {
-        con.setAutoCommit(true);
-      } catch (Exception e) {
-
-      }
+    public ProjectDeleteCommand(ProjectDao projectDao, SqlSession sqlSession) {
+        this.projectDao = projectDao;
+        this.sqlSession = sqlSession;
     }
-  }
+
+    @Override
+    public void execute(String menuName) {
+        System.out.printf("[%s]\n", menuName);
+        int projectNo = Prompt.inputInt("프로젝트 번호?");
+
+        try {
+            Project deletedProject = projectDao.findBy(projectNo);
+            if (deletedProject == null) {
+                System.out.println("없는 프로젝트입니다.");
+                return;
+            }
+
+            projectDao.deleteMembers(projectNo);
+            projectDao.delete(projectNo);
+            sqlSession.commit();
+            System.out.printf("%d번 프로젝트를 삭제 했습니다.\n", deletedProject.getNo());
+
+        } catch (Exception e) {
+            sqlSession.rollback();
+            System.out.println("삭제 중 오류 발생!");
+        }
+    }
 }
+
