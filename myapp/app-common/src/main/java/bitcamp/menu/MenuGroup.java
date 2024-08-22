@@ -23,7 +23,6 @@ public class MenuGroup extends AbstractMenu {
             String menuPath = getMenuPath();
 
             printMenus(prompt);
-            prompt.end();
             while (true) {
                 String command = prompt.input("%s>", menuPath);
                 if (command.equals("menu")) {

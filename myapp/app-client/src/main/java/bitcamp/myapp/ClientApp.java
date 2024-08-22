@@ -4,7 +4,6 @@ import bitcamp.util.Prompt;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.PrintStream;
 import java.net.Socket;
 
 public class ClientApp {
@@ -22,18 +21,16 @@ public class ClientApp {
              DataInputStream in = new DataInputStream(socket.getInputStream());
              DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
 
-            System.out.println(in.readUTF());
-
             while (true) {
-                String input = Prompt.input(">");
-                out.writeUTF(input);
-                out.flush();
-                if (input.equals("quit")) {
+                String message = in.readUTF();
+                if (message.equals("<[goodbye!]>")) {
+                    System.out.println("종료합니다.!");
                     break;
                 }
-
-                String message = in.readUTF();
-                System.out.println(message);
+                System.out.print(message);
+                String input = Prompt.input("");
+                out.writeUTF(input);
+                out.flush();
 
             }
 
@@ -42,7 +39,6 @@ public class ClientApp {
             System.out.println("실행 오류!");
             ex.printStackTrace();
         }
-        System.out.println("종료합니다.");
         Prompt.close();
     }
 }

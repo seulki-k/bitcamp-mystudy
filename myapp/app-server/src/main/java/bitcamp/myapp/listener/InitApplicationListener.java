@@ -5,7 +5,6 @@ import bitcamp.listener.ApplicationListener;
 import bitcamp.menu.MenuGroup;
 import bitcamp.menu.MenuItem;
 import bitcamp.myapp.command.HelpCommand;
-import bitcamp.myapp.command.HistoryCommand;
 import bitcamp.myapp.command.board.*;
 import bitcamp.myapp.command.project.*;
 import bitcamp.myapp.command.user.*;
@@ -69,7 +68,6 @@ public class InitApplicationListener implements ApplicationListener {
     mainMenu.add(boardMenu);
 
     mainMenu.add(new MenuItem("도움말", new HelpCommand()));
-    mainMenu.add(new MenuItem("명령내역", new HistoryCommand()));
 
     mainMenu.setExitMenuTitle("종료");
 

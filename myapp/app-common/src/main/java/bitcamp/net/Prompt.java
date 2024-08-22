@@ -53,7 +53,7 @@ public class Prompt {
     }
 
     public void println(String str) {
-        printWriter.print(str);
+        printWriter.println(str);
     }
 
     public void end() throws Exception {

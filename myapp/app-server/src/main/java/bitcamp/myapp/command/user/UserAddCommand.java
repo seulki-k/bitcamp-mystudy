@@ -4,7 +4,6 @@ import bitcamp.command.Command;
 import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.vo.User;
 import bitcamp.net.Prompt;
-import bitcamp.util.Prompt;
 import org.apache.ibatis.session.SqlSession;
 
 public class UserAddCommand implements Command {
