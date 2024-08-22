@@ -16,7 +16,7 @@ public interface ProjectDao {
 
   boolean delete(int no) throws Exception;
 
-  boolean insertMembers(int projectNo, List<User> members) throws Exception;
+  boolean insertMembers(@Param("projectNo") int projectNo,@Param("members") List<User> members) throws Exception;
 
   List<User> getMembers(int projectNo) throws Exception;
 
