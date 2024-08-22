@@ -2,18 +2,12 @@ package bitcamp.myapp;
 
 import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
-import bitcamp.myapp.dao.skel.BoardDaoSkel;
-import bitcamp.myapp.dao.skel.ProjectDaoSkel;
-import bitcamp.myapp.dao.skel.UserDaoSkel;
+import bitcamp.myapp.listener.AuthApplicationListener;
 import bitcamp.myapp.listener.InitApplicationListener;
-import org.apache.poi.ss.formula.functions.T;
+import bitcamp.net.Prompt;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +15,13 @@ public class ServerApp {
 
     List<ApplicationListener> listeners = new ArrayList<>();
     ApplicationContext appCtx = new ApplicationContext();
-    UserDaoSkel userDaoSkel;
-    BoardDaoSkel boardDaoSkel;
-    ProjectDaoSkel projectDaoSkel;
 
     public static void main(String[] args) {
         ServerApp app = new ServerApp();
 
         // 애플리케이션이 시작되거나 종료될 때 알림 받을 객체의 연락처를 등록한다.
         app.addApplicationListener(new InitApplicationListener());
+        app.addApplicationListener(new AuthApplicationListener());
 
         app.execute();
     }
@@ -44,62 +36,36 @@ public class ServerApp {
 
     void execute() {
 
-        // 애플리케이션이 시작될 때 리스너에게 알린다.
-        for (ApplicationListener listener : listeners) {
-            try {
-                listener.onStart(appCtx);
-            } catch (Exception e) {
-                System.out.println("리스너 실행 중 오류 발생!");
+        try {
+            // 애플리케이션이 시작될 때 리스너에게 알린다.
+            for (ApplicationListener listener : listeners) {
+                try {
+                    if (!listener.onStart(appCtx)) {
+                        System.out.println("종료합니다.");
+                        return;
+                    }
+                } catch (Exception e) {
+                    System.out.println("리스너 실행 중 오류 발생!");
+                    e.printStackTrace();
+                }
             }
-        }
-
-        // 클라이언트의 데이터 처리 요청을 수행할 Dao Skeleton 객체를 준비한다.
-        userDaoSkel = (UserDaoSkel) appCtx.getAttribute("userDaoSkel");
-        boardDaoSkel = (BoardDaoSkel) appCtx.getAttribute("boardDaoSkel");
-        projectDaoSkel = (ProjectDaoSkel) appCtx.getAttribute("projectDaoSkel");
-
-        System.out.println("서버 프로젝트 관리 시스템 시작!");
-
-        try (ServerSocket serverSocket = new ServerSocket(8888)) {
-            System.out.println("서버 실행 중...");
+            ServerSocket serverSocket = new ServerSocket(8888);
 
             while (true) {
-                Socket socket = serverSocket.accept();
-                //0) 스레드의 로컬 서브 클래스를 만들어 실행시키기
-//                class RequestThread extends Thread{
-//                    public void run(){
-//                        processRequest(socket);
-//                    }
-//                }
-//                new RequestThread().start();
-
-                // 1) 스레드의 서버 클래스를 만들어 실행시키기
-//                new Thread() {
-//
-//                    @Override
-//                    public void run() {
-//                        processRequest(socket);
-//                    }
-//                }.start();
-
-                // 2) Runnable 구현체를 만들어 실행시키기
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        processRequest(socket);
-//                    }
-//                }).start();
-
-                // 3)Lamda 문법으로 압축하기
-                new Thread(() -> processRequest(socket)).start();
+                Socket socket =  serverSocket.accept();
+                Prompt prompt = new Prompt(socket);
+                prompt.println("[프로젝트 관리 시스템]");
+                appCtx.getMainMenu().execute(prompt);
             }
 
-        } catch (Exception e) {
-            System.out.println("통신 중 오류 발생!");
-            e.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("실행 오류!");
+            ex.printStackTrace();
         }
 
         System.out.println("종료합니다.");
+
+//        Prompt.close();
 
         // 애플리케이션이 종료될 때 리스너에게 알린다.
         for (ApplicationListener listener : listeners) {
@@ -110,38 +76,4 @@ public class ServerApp {
             }
         }
     }
-
-    void processRequest(Socket socket) {
-        String remoteHost = null;
-        int port = 0;
-
-        // 변수 하나를 더 하는 이유는 자동으로 소켓을 close 하기 위해서
-        try (Socket s = socket) {
-            InetSocketAddress addr = (InetSocketAddress) socket.getRemoteSocketAddress();
-            remoteHost = addr.getHostString();
-            port = addr.getPort();
-            System.out.printf("%s:%d 클라이언트와 연결되었음!", remoteHost, port);
-
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-
-            String dataName = in.readUTF();
-            switch (dataName) {
-                case "users":
-                    userDaoSkel.service(in, out);
-                    break;
-                case "projects":
-                    projectDaoSkel.service(in, out);
-                    break;
-                case "boards":
-                    boardDaoSkel.service(in, out);
-                    break;
-                default:
-            }
-        } catch (Exception e) {
-            System.out.printf("%s:%d 클라이언트와 요청처리하다 오류 발생!", remoteHost, port);
-            e.printStackTrace();
-        }
-    }
-
 }
