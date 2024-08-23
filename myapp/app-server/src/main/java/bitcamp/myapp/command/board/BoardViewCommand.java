@@ -5,16 +5,17 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.net.Prompt;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class BoardViewCommand implements Command {
 
     private BoardDao boardDao;
-    private SqlSession sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
-    public BoardViewCommand(BoardDao boardDao, SqlSession sqlSession) {
+    public BoardViewCommand(BoardDao boardDao, SqlSessionFactory sqlSessionFactory) {
 
         this.boardDao = boardDao;
-        this.sqlSession = sqlSession;
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     @Override
@@ -22,7 +23,6 @@ public class BoardViewCommand implements Command {
         try {
             prompt.printf("[%s]\n", menuName);
             int boardNo = prompt.inputInt("게시글 번호?");
-
 
             Board board = boardDao.findBy(boardNo);
             if (board == null) {
@@ -32,7 +32,7 @@ public class BoardViewCommand implements Command {
 
             board.setViewCount(board.getViewCount() + 1);
             boardDao.updateViewCount(board.getNo(), board.getViewCount());
-            sqlSession.commit();
+            sqlSessionFactory.openSession(false).commit();
 
             prompt.printf("제목: %s\n", board.getTitle());
             prompt.printf("내용: %s\n", board.getContent());
@@ -41,7 +41,7 @@ public class BoardViewCommand implements Command {
             prompt.printf("작성자: %s\n", board.getWriter().getName());
 
         } catch (Exception e) {
-            sqlSession.rollback();
+            sqlSessionFactory.openSession(false).rollback();
             prompt.println("조회 중 오류 발생!");
             e.printStackTrace();
         }

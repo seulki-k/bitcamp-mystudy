@@ -1,16 +1,21 @@
 package bitcamp.net;
 
+import bitcamp.context.ApplicationContext;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.sql.Date;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 public class Prompt {
+
+    //모든 클라이언트가 사용할 값 보고나소
+    ApplicationContext ctx;
+
+    private Map<String, Object> attributes = new HashMap<>();
 
     private Socket socket;
     private DataInputStream in;
@@ -23,10 +28,25 @@ public class Prompt {
     // 이 객체를 사용하여 출력한 내용은 모두 위의 StringWriter에 보관된다.
     private PrintWriter printWriter = new PrintWriter(stringWriter);
 
-    public Prompt(Socket socket) throws Exception {
+    public Prompt(Socket socket, ApplicationContext ctx) throws Exception {
+        this.socket = socket;
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
+        this.ctx = ctx;
     }
+
+    public ApplicationContext getApplicationContext(){
+        return this.ctx;
+    }
+
+    public void setAttributes(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public Object getAttribute(String name){
+        return attributes.get(name);
+    }
+
 
     public String input(String format, Object... args) throws Exception{
         String promptTitle = String.format(format + " ", args);

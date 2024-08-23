@@ -5,6 +5,7 @@ import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
 import bitcamp.net.Prompt;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.sql.Connection;
 
@@ -12,12 +13,12 @@ public class ProjectUpdateCommand implements Command {
 
     private ProjectDao projectDao;
     private ProjectMemberHandler memberHandler;
-    private SqlSession sqlSession;
+    private SqlSessionFactory sqlSessionFactory;
 
-    public ProjectUpdateCommand(ProjectDao projectDao, ProjectMemberHandler memberHandler, SqlSession sqlSession) {
+    public ProjectUpdateCommand(ProjectDao projectDao, ProjectMemberHandler memberHandler, SqlSessionFactory sqlSessionFactory) {
         this.projectDao = projectDao;
         this.memberHandler = memberHandler;
-        this.sqlSession = sqlSession;
+        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     @Override
@@ -47,11 +48,11 @@ public class ProjectUpdateCommand implements Command {
             if(project.getMembers().size() > 0 && project.getMembers() != null){
                 projectDao.insertMembers(projectNo, project.getMembers());
             }
-            sqlSession.commit();
+            sqlSessionFactory.openSession(false).commit();
             prompt.println("변경 했습니다.");
 
         } catch (Exception e) {
-            sqlSession.rollback();
+            sqlSessionFactory.openSession(false).rollback();
             prompt.println("변경 중 오류 발생!");
         }
     }
