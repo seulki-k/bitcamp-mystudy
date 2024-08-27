@@ -1,0 +1,85 @@
+package bitcamp.myapp.servlet.board;
+
+import bitcamp.command.Command;
+import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.dao.UserDao;
+import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.vo.User;
+import bitcamp.net.Prompt;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@WebServlet("/board/list")
+public class BoardListCommand implements Servlet {
+
+    private ServletConfig config;
+    private BoardDao boardDao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        this.config = config;
+        ServletContext ctx = config.getServletContext();
+        boardDao = (BoardDao) ctx.getAttribute("boardDao");
+
+    }
+
+    @Override
+    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+        res.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = res.getWriter();
+        out.println("<!DOCTYPE html >");
+        out.println("<html lang>");
+        out.println("<head >");
+        out.println("<meta charset = 'UTF-8' >");
+        out.println("<title > Title_User </title >");
+        out.println("<style>");
+
+
+        out.println("h1{");
+        out.println("color: red};");
+        out.println("</style>");
+        out.println("</head >");
+        out.println("<body >");
+        try {
+            out.println("<h1>[게시판 목록]<br><br></h1>");
+            out.println("<table border = '5'>");
+            out.println("<thead>");
+            out.println("<tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>");
+            out.println("</thead>");
+            out.println("<tbody>");
+            for (Board board : boardDao.list()) {
+                out.printf("<tr><td>%d</td><td>%s</td><td>%s</td><td> %tY-%4$tm-%4$td</td><td> %d</td></tr>",
+                        board.getNo(),
+                        board.getTitle(),
+                        board.getWriter().getName(),
+                        board.getCreatedDate(),
+                        board.getViewCount());
+            }
+            out.println("</tbody>");
+            out.println("</table>");
+        } catch (Exception e) {
+            out.println("<p>목록 조회 중 오류 발생!</p>");
+            e.printStackTrace();
+        }
+        out.println("</body >");
+        out.println("</html >");
+    }
+
+    @Override
+    public ServletConfig getServletConfig() {
+        return this.config;
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "게시판 목록 조회";
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}
