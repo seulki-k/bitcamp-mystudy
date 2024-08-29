@@ -34,6 +34,7 @@ public class ProjectListCommand implements Servlet {
         out.println("<head >");
         out.println("<meta charset = 'UTF-8' >");
         out.println("<title > Title_User </title >");
+        out.println("<link rel='stylesheet' href='/css/common.css'>");
         out.println("<style>");
 
 
@@ -42,15 +43,21 @@ public class ProjectListCommand implements Servlet {
         out.println("</style>");
         out.println("</head >");
         out.println("<body >");
-        try {
+        try
+        {
+            out.println("<header >");
+            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
+            out.println("<span > 프로젝트 관리 시스템</span >");
+            out.println("</header >");
             out.println("<h1>[프로젝트 목록]</h1><br><br>");
+            out.println("<p><a href = '/project/form'>새 프로젝트</a></p>");
             out.println("<table border = '5'>");
             out.println("<thead>");
             out.println("<tr><th>번호</th> <th>프로젝트</th><th> 기간</th></tr>");
             out.println("</thead>");
             out.println("<tbody>");
             for (Project project : projectDao.list()) {
-                out.printf("<tr><td>%d</td><td> %s</td><td> %s ~ %s</td></tr>",
+                out.printf("      <tr><td>%d</td><td><a href='/project/view?no=%1$d'>%s</a></td><td>%s ~ %s</td></tr>\n",
                         project.getNo(), project.getTitle(), project.getStartDate(), project.getEndDate());
             }
             out.println("</tbody>");

@@ -42,8 +42,8 @@ public class UserListServlet implements Servlet {
         out.println("<head >");
         out.println("<meta charset = 'UTF-8' >");
         out.println("<title > Title_User </title >");
+        out.println("<link rel='stylesheet' href='/css/common.css'>");
         out.println("<style>");
-
 
 
         out.println("h1{");
@@ -53,16 +53,22 @@ public class UserListServlet implements Servlet {
         out.println("<body >");
 
         try {
-            out.println("<h1>[유저 목록]<br><br></h1>");
-            out.println("<table border = '5'>");
+            out.println("<header >");
+            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
+            out.println("<span > 프로젝트 관리 시스템</span >");
+            out.println("</header >");
+
+            out.println("<h1>[회원 목록]<br><br></h1>");
+            out.println("<p><a href = '/user/form.html'>새 회원</a></p>");
+            out.println("<table>");
             out.println("<thead>");
             out.println("<tr><th>번호</th><th>이름</th><th>이름</th></tr>");
             out.println("</thead>");
             out.println("<tbody>");
 
             for (User user : userDao.list()) {
-                out.printf("<tr><td>%d</td><td><a href='/user/view?no=%1$d'>%s</td><td>%s</td><td></td></tr>",
-                 user.getNo(), user.getName(), user.getEmail());
+                out.printf("<tr><td>%d</td><td><a href='/user/view?no=%1$d'>%s</td><td>%s</td></tr>",
+                        user.getNo(), user.getName(), user.getEmail());
             }
             out.println("</tbody>");
             out.println("</table>");

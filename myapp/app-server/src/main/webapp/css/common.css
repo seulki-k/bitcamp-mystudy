@@ -1,0 +1,25 @@
+header {
+     border-bottom : 1px solid GRAY;
+}
+
+header img {
+    vertical-align:middle;
+    height : 20px;
+}
+
+table {
+    border-width : 1px;
+    border-style : solid;
+    border-collapse : separate;
+    border-spacing : 2px;
+}
+/* 테이블 경계선 스타일 */
+table, th, td {
+    border: 1px solid black;
+
+}
+
+th {
+    background-color : #f2f2f2;
+    padding : 5px;
+}

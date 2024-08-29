@@ -35,6 +35,7 @@ public class BoardListCommand implements Servlet {
         out.println("<head >");
         out.println("<meta charset = 'UTF-8' >");
         out.println("<title > Title_User </title >");
+        out.println("<link rel='stylesheet' href='/css/common.css'>");
         out.println("<style>");
 
 
@@ -44,14 +45,19 @@ public class BoardListCommand implements Servlet {
         out.println("</head >");
         out.println("<body >");
         try {
+            out.println("<header >");
+            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
+            out.println("<span > 프로젝트 관리 시스템</span >");
+            out.println("</header >");
             out.println("<h1>[게시판 목록]<br><br></h1>");
+            out.println("<p><a href = '/board/form.html'>새 게시글</a></p>");
             out.println("<table border = '5'>");
             out.println("<thead>");
             out.println("<tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>");
             out.println("</thead>");
             out.println("<tbody>");
             for (Board board : boardDao.list()) {
-                out.printf("<tr><td>%d</td><td>%s</td><td>%s</td><td> %tY-%4$tm-%4$td</td><td> %d</td></tr>",
+                out.printf("      <tr><td>%d</td><td><a href='/board/view?no=%1$d'>%s</a></td><td>%s</td><td>%tY-%4$tm-%4$td</td><td>%d</td></tr>\n",
                         board.getNo(),
                         board.getTitle(),
                         board.getWriter().getName(),
