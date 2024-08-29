@@ -5,24 +5,26 @@ import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import javax.servlet.*;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 
-@WebServlet("/project/add")
-public class ProjectAddServlet extends GenericServlet {
+@WebServlet("/project/update")
+public class ProjectUpdateServlet extends GenericServlet {
 
     private ProjectDao projectDao;
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
     public void init() throws ServletException {
-        ServletContext ctx = this.getServletContext();
-        this.projectDao = (ProjectDao) ctx.getAttribute("projectDao");
-        this.sqlSessionFactory = (SqlSessionFactory) ctx.getAttribute("sqlSessionFactory");
+        this.projectDao = (ProjectDao) this.getServletContext().getAttribute("projectDao");
+        this.sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
     }
 
     @Override
@@ -36,24 +38,23 @@ public class ProjectAddServlet extends GenericServlet {
         out.println("    <meta charset='UTF-8'>");
         out.println("    <meta http-equiv='refresh' content='1;url=/project/list'>");
         out.println("    <title>Title</title>");
-        out.println("<link rel='stylesheet' href='/css/common.css'>");
+        out.println("    <link href='/css/common.css' rel='stylesheet'>");
         out.println("</head>");
         out.println("<body>");
 
         try {
-            out.println("<header >");
-            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
-            out.println("<span > 프로젝트 관리 시스템</span >");
-            out.println("</header >");
-            out.println("<h1>프로젝트 등록 결과</h1>");
+            out.println("<header>");
+            out.println("  <a href='/'><img src='/images/home.png'></a>");
+            out.println("        프로젝트 관리 시스템");
+            out.println("</header>");
+            out.println("<h1>프로젝트 변경 결과</h1>");
 
             Project project = new Project();
+            project.setNo(Integer.parseInt(req.getParameter("no")));
             project.setTitle(req.getParameter("title"));
             project.setDescription(req.getParameter("description"));
             project.setStartDate(Date.valueOf(req.getParameter("startDate")));
             project.setEndDate(Date.valueOf(req.getParameter("endDate")));
-
-
 
             String[] memberNos = req.getParameterValues("member");
             if (memberNos != null) {
@@ -64,22 +65,28 @@ public class ProjectAddServlet extends GenericServlet {
                 project.setMembers(members);
             }
 
-            projectDao.insert(project);
+            if (!projectDao.update(project)) {
+                out.println("<p>없는 프로젝트입니다.</p>");
+                out.println("</body>");
+                out.println("</html>");
+                return;
+            }
 
+            projectDao.deleteMembers(project.getNo());
             if (project.getMembers() != null && project.getMembers().size() > 0) {
                 projectDao.insertMembers(project.getNo(), project.getMembers());
             }
             sqlSessionFactory.openSession(false).commit();
-
-            out.println("<p>등록 성공입니다.</p>");
+            out.println("<p>변경 했습니다.</p>");
 
         } catch (Exception e) {
             sqlSessionFactory.openSession(false).rollback();
-            out.println("<p>등록 중 오류 발생!</p>");
+            out.println("<p>변경 중 오류 발생!</p>");
             e.printStackTrace();
         }
 
         out.println("</body>");
         out.println("</html>");
     }
+
 }

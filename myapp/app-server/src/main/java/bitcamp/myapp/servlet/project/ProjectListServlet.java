@@ -1,10 +1,7 @@
 package bitcamp.myapp.servlet.project;
 
-import bitcamp.command.Command;
-import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.vo.Project;
-import bitcamp.net.Prompt;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet("/project/list")
-public class ProjectListCommand implements Servlet {
+public class ProjectListServlet implements Servlet {
 
     private ServletConfig config;
     private ProjectDao projectDao;
