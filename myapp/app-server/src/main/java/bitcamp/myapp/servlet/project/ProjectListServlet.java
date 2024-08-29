@@ -5,6 +5,7 @@ import bitcamp.myapp.vo.Project;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -25,27 +26,11 @@ public class ProjectListServlet implements Servlet {
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         res.setContentType("text/html;charset=UTF-8");
+        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE html >");
-        out.println("<html lang>");
-        out.println("<head >");
-        out.println("<meta charset = 'UTF-8' >");
-        out.println("<title > Title_User </title >");
-        out.println("<link rel='stylesheet' href='/css/common.css'>");
-        out.println("<style>");
-
-
-        out.println("h1{");
-        out.println("color: red};");
-        out.println("</style>");
-        out.println("</head >");
-        out.println("<body >");
         try
         {
-            out.println("<header >");
-            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
-            out.println("<span > 프로젝트 관리 시스템</span >");
-            out.println("</header >");
+
             out.println("<h1>[프로젝트 목록]</h1><br><br>");
             out.println("<p><a href = '/project/form'>새 프로젝트</a></p>");
             out.println("<table border = '5'>");

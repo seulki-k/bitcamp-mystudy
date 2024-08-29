@@ -24,26 +24,17 @@ public class UserViewServlet extends GenericServlet {
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         res.setContentType("text/html;charset=UTF-8");
+
+        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
+
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE html >");
-        out.println("<html lang>");
-        out.println("<head >");
-        out.println("<meta charset = 'UTF-8' >");
-        out.println("<title > Title_User </title >");
-        out.println("<link rel='stylesheet' href='/css/common.css'>");
-        out.println("</head >");
-        out.println("<body >");
+
 
         try {
-            out.println("<header >");
-            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
-            out.println("<span > 프로젝트 관리 시스템</span >");
-            out.println("</header >");
 
             out.println("<h1>회원 조회</h1>");
 
             int userNo = Integer.parseInt(req.getParameter("no"));
-
 
             User user = userDao.findBy(userNo);
             if (user == null) {

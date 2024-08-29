@@ -37,29 +37,12 @@ public class UserListServlet implements Servlet {
         // '?' 문자로 변환된다.
 
         PrintWriter out = res.getWriter();
-        out.println("<!DOCTYPE html >");
-        out.println("<html lang>");
-        out.println("<head >");
-        out.println("<meta charset = 'UTF-8' >");
-        out.println("<title > Title_User </title >");
-        out.println("<link rel='stylesheet' href='/css/common.css'>");
-        out.println("<style>");
 
-
-        out.println("h1{");
-        out.println("color: red};");
-        out.println("</style>");
-        out.println("</head >");
-        out.println("<body >");
+        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
 
         try {
-            out.println("<header >");
-            out.println("<a href = '/' ><img src = '/images/home.png'></a >");
-            out.println("<span > 프로젝트 관리 시스템</span >");
-            out.println("</header >");
-
             out.println("<h1>[회원 목록]<br><br></h1>");
-            out.println("<p><a href = '/user/form.html'>새 회원</a></p>");
+            out.println("<p><a href = '/user/form'>새 회원</a></p>");
             out.println("<table>");
             out.println("<thead>");
             out.println("<tr><th>번호</th><th>이름</th><th>이름</th></tr>");

@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -28,22 +29,11 @@ public class BoardViewServlet extends GenericServlet {
   @Override
   public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
     res.setContentType("text/html;charset=UTF-8");
-
+    req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
     PrintWriter out = res.getWriter();
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("    <meta charset='UTF-8'>");
-    out.println("    <title>Title</title>");
-    out.println("    <link href='/css/common.css' rel='stylesheet'>");
-    out.println("</head>");
-    out.println("<body>");
 
     try {
-      out.println("<header>");
-      out.println("  <a href='/'><img src='/images/home.png'></a>");
-      out.println("        프로젝트 관리 시스템");
-      out.println("</header>");
+
       out.println("<h1>게시글 조회</h1>");
 
       int boardNo = Integer.parseInt(req.getParameter("no"));
