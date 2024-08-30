@@ -10,7 +10,7 @@
         <result column="description" property="description"/>
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
-
+        
         <collection property="members" ofType="user">
             <id column="user_id" property="no"/>
             <result column="name" property="name"/>
@@ -19,14 +19,14 @@
 
     <select id="list" resultMap="ProjectMap">
         select
-        project_id,
-        title,
-        start_date,
-        end_date
+            project_id,
+            title,
+            start_date,
+            end_date
         from
-        myapp_projects
+            myapp_projects
         order by
-        project_id asc
+            project_id asc
     </select>
 
     <insert id="insert" parameterType="project"
@@ -37,29 +37,29 @@
 
     <select id="findBy" resultMap="ProjectMap" parameterType="int">
         select
-        p.project_id,
-        p.title,
-        p.description,
-        p.start_date,
-        p.end_date,
-        pm.user_id,
-        u.name
+            p.project_id,
+            p.title,
+            p.description,
+            p.start_date,
+            p.end_date,
+            pm.user_id,
+            u.name
         from
-        myapp_projects p
-        left outer join myapp_project_members pm
-        on p.project_id=pm.project_id
-        left outer join myapp_users u
-        on pm.user_id=u.user_id
+            myapp_projects p
+            left outer join myapp_project_members pm
+                on p.project_id=pm.project_id
+            left outer join myapp_users u
+                on pm.user_id=u.user_id
         where
-        p.project_id=#{no}
+            p.project_id=#{no}
     </select>
 
-    <update id="update" parameterType="bitcamp.myapp.vo.Project">
+    <update id="update" parameterType="project">
         update myapp_projects set
-        title=#{title},
-        description=#{description},
-        start_date=#{startDate},
-        end_date=#{endDate}
+            title=#{title},
+            description=#{description},
+            start_date=#{startDate},
+            end_date=#{endDate}
         where project_id=#{no}
     </update>
 
@@ -76,17 +76,17 @@
         </foreach>
     </insert>
 
-    <select id="getMembers" resultType="bitcamp.myapp.vo.User" parameterType="int">
+    <select id="getMembers" resultType="user" parameterType="int">
         select
-        pm.user_id as no,
-        u.name
+            pm.user_id as no,
+            u.name
         from
-        myapp_project_members pm
-        inner join myapp_users u on pm.user_id=u.user_id
+            myapp_project_members pm
+            inner join myapp_users u on pm.user_id=u.user_id
         where
-        pm.project_id=#{no}
+            pm.project_id=#{no}
         order by
-        u.name asc
+            u.name asc
     </select>
 
     <delete id="deleteMembers" parameterType="int">

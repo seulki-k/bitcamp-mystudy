@@ -11,49 +11,42 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @WebServlet("/user/update")
 public class UserUpdateServlet extends GenericServlet {
 
-    private UserDao userDao;
-    private SqlSessionFactory sqlSessionFactory;
+  private UserDao userDao;
+  private SqlSessionFactory sqlSessionFactory;
 
-    @Override
-    public void init() throws ServletException {
-        this.userDao = (UserDao) this.getServletContext().getAttribute("userDao");
-        this.sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
+  @Override
+  public void init() throws ServletException {
+    this.userDao = (UserDao) this.getServletContext().getAttribute("userDao");
+    this.sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
+  }
+
+
+  @Override
+  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+    try {
+      User user = new User();
+      user.setNo(Integer.parseInt(req.getParameter("no")));
+      user.setName(req.getParameter("name"));
+      user.setEmail(req.getParameter("email"));
+      user.setPassword(req.getParameter("password"));
+      user.setTel(req.getParameter("tel"));
+
+      if (userDao.update(user)) {
+        sqlSessionFactory.openSession(false).commit();
+        ((HttpServletResponse) res).sendRedirect("/user/list");
+      } else {
+        throw new Exception("없는 회원입니다!");
+      }
+
+    } catch (Exception e) {
+      sqlSessionFactory.openSession(false).rollback();
+      req.setAttribute("exception", e);
+      req.getRequestDispatcher("/error.jsp").forward(req, res);
     }
+  }
 
-    @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = res.getWriter();
-        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
-
-        try {
-            out.println("<h1>회원 변경 결과</h1>");
-
-            User user = new User();
-            user.setNo(Integer.parseInt(req.getParameter("no")));
-            user.setName(req.getParameter("name"));
-            user.setEmail(req.getParameter("email"));
-            user.setPassword(req.getParameter("password"));
-            user.setTel(req.getParameter("tel"));
-
-            if (userDao.update(user)) {
-                sqlSessionFactory.openSession(false).commit();
-                out.println("<p>변경 했습니다.</p>");
-            } else {
-                out.println("<p>없는 회원입니다.</p>");
-            }
-        } catch (Exception e) {
-            sqlSessionFactory.openSession(false).rollback();
-            out.println("변경 중 오류 발생!");
-            e.printStackTrace();
-        }
-        out.println("</body >");
-        out.println("</html >");
-        ((HttpServletResponse) res).setHeader("Refresh", "1;url=/user/list");
-    }
 }

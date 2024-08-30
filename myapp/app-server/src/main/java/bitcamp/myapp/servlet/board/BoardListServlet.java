@@ -3,70 +3,37 @@ package bitcamp.myapp.servlet.board;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 
-import javax.servlet.*;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet("/board/list")
-public class BoardListServlet implements Servlet {
+public class BoardListServlet extends GenericServlet {
 
-    private ServletConfig config;
-    private BoardDao boardDao;
+  private BoardDao boardDao;
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        this.config = config;
-        ServletContext ctx = config.getServletContext();
-        boardDao = (BoardDao) ctx.getAttribute("boardDao");
+  @Override
+  public void init() throws ServletException {
+    boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
+  }
 
+  @Override
+  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+    try {
+      List<Board> list = boardDao.list();
+      req.setAttribute("list", list);
+
+      res.setContentType("text/html;charset=UTF-8");
+      req.getRequestDispatcher("/board/list.jsp").include(req, res);
+
+    } catch (Exception e) {
+      req.setAttribute("exception", e);
+      req.getRequestDispatcher("/error.jsp").forward(req, res);
     }
+  }
 
-    @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
-        PrintWriter out = res.getWriter();
-        try {
-
-            out.println("<h1>[게시판 목록]<br><br></h1>");
-            out.println("<p><a href = '/board/form'>새 게시글</a></p>");
-            out.println("<table border = '5'>");
-            out.println("<thead>");
-            out.println("<tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th></tr>");
-            out.println("</thead>");
-            out.println("<tbody>");
-            for (Board board : boardDao.list()) {
-                out.printf("      <tr><td>%d</td><td><a href='/board/view?no=%1$d'>%s</a></td><td>%s</td><td>%tY-%4$tm-%4$td</td><td>%d</td></tr>\n",
-                        board.getNo(),
-                        board.getTitle(),
-                        board.getWriter().getName(),
-                        board.getCreatedDate(),
-                        board.getViewCount());
-            }
-            out.println("</tbody>");
-            out.println("</table>");
-        } catch (Exception e) {
-            out.println("<p>목록 조회 중 오류 발생!</p>");
-            e.printStackTrace();
-        }
-        out.println("</body >");
-        out.println("</html >");
-    }
-
-    @Override
-    public ServletConfig getServletConfig() {
-        return this.config;
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "게시판 목록 조회";
-    }
-
-    @Override
-    public void destroy() {
-
-    }
 }

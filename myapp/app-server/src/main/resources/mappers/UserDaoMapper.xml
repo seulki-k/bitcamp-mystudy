@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserDao">
 
-    <resultMap id="UserMap" type="bitcamp.myapp.vo.User">
+    <resultMap id="UserMap" type="user">
         <id column="user_id" property="no"/>
         <result column="name" property="name"/>
         <result column="email" property="email"/>
@@ -23,7 +23,7 @@
             user_id asc
     </select>
 
-    <insert id="insert" parameterType="bitcamp.myapp.vo.User">
+    <insert id="insert" parameterType="user">
         insert into myapp_users(name, email, pwd, tel)
         values (#{name}, #{email}, sha1(#{password}), #{tel})
     </insert>
@@ -42,31 +42,28 @@
 
     <select id="findByEmailAndPassword" resultMap="UserMap" parameterType="map">
         select
-        user_id,
-        name,
-        email,
-        tel
+            user_id,
+            name,
+            email,
+            tel
         from
-        myapp_users
+            myapp_users
         where
-        email=#{email} and pwd=sha1(#{password})
+            email=#{email} and pwd=sha1(#{password})
     </select>
 
-    <update id="update" parameterType="bitcamp.myapp.vo.User">
-        update
-        myapp_users set
-        name=#{name},
-        email=#{email},
-        pwd=sha1(#{password}),
-        tel=#{tel}
+    <update id="update" parameterType="user">
+        update myapp_users set
+            name=#{name},
+            email=#{email},
+            pwd=sha1(#{password}),
+            tel=#{tel}
         where
-        user_id=#{no}
+            user_id=#{no}
     </update>
 
     <delete id="delete" parameterType="int">
         delete from myapp_users
-        where
-        user_id=#{ok}
+        where user_id=#{no}
     </delete>
-
 </mapper>

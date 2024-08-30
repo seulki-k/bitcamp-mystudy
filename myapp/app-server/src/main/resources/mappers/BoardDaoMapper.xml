@@ -19,44 +19,44 @@
 
     <select id="list" resultMap="BoardMap">
         select
-        b.board_id,
-        b.title,
-        b.created_date,
-        b.view_count,
-        u.user_id,
-        u.name
+            b.board_id,
+            b.title,
+            b.created_date,
+            b.view_count,
+            u.user_id,
+            u.name
         from
-        myapp_boards b inner join myapp_users u on b.user_id=u.user_id
+            myapp_boards b inner join myapp_users u on b.user_id=u.user_id
         order by
-        b.board_id asc
+            b.board_id asc
     </select>
 
-    <insert id="insert" parameterType="bitcamp.myapp.vo.Board">
+    <insert id="insert" parameterType="board">
         insert into myapp_boards(title, content, user_id)
         values (#{title}, #{content}, #{writer.no})
     </insert>
 
     <select id="findBy" resultMap="BoardMap" parameterType="int">
         select
-        b.board_id,
-        b.title,
-        b.content,
-        b.created_date,
-        b.view_count,
-        u.user_id,
-        u.name
+            b.board_id,
+            b.title,
+            b.content,
+            b.created_date,
+            b.view_count,
+            u.user_id,
+            u.name
         from
-        myapp_boards b inner join myapp_users u on b.user_id=u.user_id
+            myapp_boards b inner join myapp_users u on b.user_id=u.user_id
         where
-        b.board_id=#{no}
+            b.board_id=#{no}
     </select>
 
-    <update id="update" parameterType="bitcamp.myapp.vo.Board">
+    <update id="update" parameterType="board">
         update myapp_boards set
-        title=#{title},
-        content=#{content}
+            title=#{title},
+            content=#{content}
         where
-        board_id=#{no}
+            board_id=#{no}
     </update>
 
     <delete id="delete" parameterType="int">
@@ -66,7 +66,7 @@
 
     <update id="updateViewCount" parameterType="map">
         update myapp_boards set
-        view_count=#{count}
+            view_count=#{count}
         where board_id=#{no}
     </update>
 </mapper>

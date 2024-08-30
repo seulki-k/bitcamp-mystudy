@@ -1,8 +1,6 @@
 package bitcamp.myapp.servlet.project;
 
-import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.dao.UserDao;
-import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
 import javax.servlet.GenericServlet;
@@ -10,53 +8,31 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet("/project/form")
 public class ProjectFormServlet extends GenericServlet {
 
-    private UserDao userDao;
+  private UserDao userDao;
 
-    @Override
-    public void init() throws ServletException {
-        // 서블릿 컨테이너 ---> init(ServletConfig) ---> init() 호출한다.
-        userDao = (UserDao) this.getServletContext().getAttribute("userDao");
+  @Override
+  public void init() throws ServletException {
+    userDao = (UserDao) this.getServletContext().getAttribute("userDao");
+  }
+
+  @Override
+  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+    try {
+      List<User> users = userDao.list();
+      req.setAttribute("users", users);
+
+      res.setContentType("text/html;charset=UTF-8");
+      req.getRequestDispatcher("/project/form.jsp").include(req, res);
+
+    } catch (Exception e) {
+      req.setAttribute("exception", e);
+      req.getRequestDispatcher("/error.jsp").forward(req, res);
     }
-
-    @Override
-    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html;charset=UTF-8");
-        req.getRequestDispatcher("/header").include(req, res); // HeaderServlet의 Service()를 호출
-        PrintWriter out = res.getWriter();
-
-        try {
-
-            out.println("<h1>프로젝트 등록</h1>");
-            out.println("<form action=' /project/add'>");
-            out.println("       프로젝트명 : <input name='title' type='text'><br>");
-            out.println("       설명 : <input name='description' type='text'><br>");
-            out.println("       기간 : <input name='startDate' type='date'>");
-            out.println("       <input name='endDate' type='date'><br>");
-            out.println("       팀원 : ");
-            out.println("       <ul>");
-            List<User> users = userDao.list();
-
-            for (User user : users) {
-                out.printf("       <li><input name='member' value='%d' type='checkbox'>%s</li>",
-                        user.getNo(),user.getName());
-            }
-
-
-            out.println("<input type='submit' value='등록'>");
-            out.println("</form>");
-        } catch (Exception e) {
-            out.println("<p>조회 중 오류 발생!</p>");
-        }
-
-        out.println("</body>");
-        out.println("</html>");
-    }
+  }
 }

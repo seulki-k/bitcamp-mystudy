@@ -2,7 +2,6 @@ package bitcamp.myapp.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -77,15 +76,15 @@ public class Project implements Serializable {
     return endDate;
   }
 
-  public void setMembers(List<User> members) {
-    this.members = members;
-  }
-
   public void setEndDate(Date endDate) {
     this.endDate = endDate;
   }
 
   public List<User> getMembers() {
     return members;
+  }
+
+  public void setMembers(List<User> members) {
+    this.members = members;
   }
 }
