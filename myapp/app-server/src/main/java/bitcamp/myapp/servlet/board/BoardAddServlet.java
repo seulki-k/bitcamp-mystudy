@@ -7,12 +7,13 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/board/add")
-public class BoardAddServlet extends GenericServlet {
+public class BoardAddServlet extends HttpServlet {
 
   private BoardDao boardDao;
   private SqlSessionFactory sqlSessionFactory;
@@ -25,7 +26,13 @@ public class BoardAddServlet extends GenericServlet {
   }
 
   @Override
-  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    res.setContentType("text/html;charset=UTF-8");
+    req.getRequestDispatcher("/board/form.jsp").include(req, res);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
       Board board = new Board();
       board.setTitle(req.getParameter("title"));

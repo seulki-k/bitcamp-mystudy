@@ -6,11 +6,13 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/user/add")
-public class UserAddServlet extends GenericServlet {
+public class UserAddServlet extends HttpServlet {
 
   private UserDao userDao;
   private SqlSessionFactory sqlSessionFactory;
@@ -22,8 +24,15 @@ public class UserAddServlet extends GenericServlet {
     this.sqlSessionFactory = (SqlSessionFactory) ctx.getAttribute("sqlSessionFactory");
   }
 
+
   @Override
-  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    res.setContentType("text/html;charset=UTF-8");
+    req.getRequestDispatcher("/user/form.jsp").include(req, res);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
       User user = new User();
       user.setName(req.getParameter("name"));
@@ -33,7 +42,7 @@ public class UserAddServlet extends GenericServlet {
 
       userDao.insert(user);
       sqlSessionFactory.openSession(false).commit();
-      ((HttpServletResponse) res).sendRedirect("/user/list");
+      res.sendRedirect("/user/list");
 
     } catch (Exception e) {
       sqlSessionFactory.openSession(false).rollback();

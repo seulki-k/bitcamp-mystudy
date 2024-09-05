@@ -10,13 +10,15 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
 @WebServlet("/project/update")
-public class ProjectUpdateServlet extends GenericServlet {
+public class ProjectUpdateServlet extends HttpServlet {
 
   private ProjectDao projectDao;
   private SqlSessionFactory sqlSessionFactory;
@@ -28,7 +30,7 @@ public class ProjectUpdateServlet extends GenericServlet {
   }
 
   @Override
-  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
       Project project = new Project();
       project.setNo(Integer.parseInt(req.getParameter("no")));
@@ -55,7 +57,7 @@ public class ProjectUpdateServlet extends GenericServlet {
         projectDao.insertMembers(project.getNo(), project.getMembers());
       }
       sqlSessionFactory.openSession(false).commit();
-      ((HttpServletResponse) res).sendRedirect("/project/list");
+    res.sendRedirect("/project/list");
 
     } catch (Exception e) {
       sqlSessionFactory.openSession(false).rollback();

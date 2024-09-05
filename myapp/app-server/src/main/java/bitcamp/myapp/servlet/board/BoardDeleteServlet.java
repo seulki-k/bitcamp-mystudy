@@ -10,12 +10,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/board/delete")
-public class BoardDeleteServlet extends GenericServlet {
+public class BoardDeleteServlet extends HttpServlet {
 
   private BoardDao boardDao;
   private SqlSessionFactory sqlSessionFactory;
@@ -27,7 +28,7 @@ public class BoardDeleteServlet extends GenericServlet {
   }
 
   @Override
-  public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
       User loginUser = (User) ((HttpServletRequest) req).getSession().getAttribute("loginUser");
       int boardNo = Integer.parseInt(req.getParameter("no"));
