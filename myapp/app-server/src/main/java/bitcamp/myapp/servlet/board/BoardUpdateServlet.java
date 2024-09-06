@@ -30,7 +30,8 @@ public class BoardUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
-      User loginUser = (User) ((HttpServletRequest) req).getSession().getAttribute("loginUser");
+      req.setCharacterEncoding("UTF-8");
+      User loginUser = (User) req.getSession().getAttribute("loginUser");
       int boardNo = Integer.parseInt(req.getParameter("no"));
       Board board = boardDao.findBy(boardNo);
 

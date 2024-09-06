@@ -34,6 +34,7 @@ public class BoardAddServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
+      req.setCharacterEncoding("UTF-8");
       Board board = new Board();
       board.setTitle(req.getParameter("title"));
       board.setContent(req.getParameter("content"));
