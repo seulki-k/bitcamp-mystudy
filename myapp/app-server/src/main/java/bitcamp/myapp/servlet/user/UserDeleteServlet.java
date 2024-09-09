@@ -1,7 +1,6 @@
 package bitcamp.myapp.servlet.user;
 
 import bitcamp.myapp.dao.UserDao;
-import bitcamp.myapp.servlet.HeaderServlet;
 import org.apache.ibatis.session.SqlSessionFactory;
 
 import javax.servlet.GenericServlet;
