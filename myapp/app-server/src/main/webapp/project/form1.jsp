@@ -3,8 +3,6 @@
     contentType="text/html;charset=UTF-8" 
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
-<%@ page import="bitcamp.myapp.vo.User"%>
-<%@ page import="java.util.List"%>
 
 <jsp:include page="/header.jsp"/>
 
@@ -14,8 +12,7 @@
       설명: <textarea name='description'></textarea><br>
       기간: <input name='startDate' type='date'> ~
       <input name='endDate' type='date'><br>
-      <input type='submit' value='등록'>
-      <button> 다음 </button>
+      <button>다음</button>
 </form>
 
 </body>

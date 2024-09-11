@@ -1,6 +1,6 @@
 package bitcamp.myapp.servlet.auth;
 
-import bitcamp.myapp.dao.UserDao;
+import bitcamp.myapp.service.UserService;
 import bitcamp.myapp.vo.User;
 
 import javax.servlet.ServletException;
@@ -11,50 +11,51 @@ import java.io.IOException;
 @WebServlet("/auth/login")
 public class LoginServlet extends HttpServlet {
 
-    private UserDao userDao;
+  private UserService userService;
 
-    @Override
-    public void init() throws ServletException {
-        userDao = (UserDao) this.getServletContext().getAttribute("userDao");
-    }
+  @Override
+  public void init() throws ServletException {
+    userService = (UserService) this.getServletContext().getAttribute("userService");
+  }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    res.setContentType("text/html;charset=UTF-8");
+    req.getRequestDispatcher("/auth/form.jsp").include(req, res);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    try {
+      String email = req.getParameter("email");
+      String password = req.getParameter("password");
+
+      User user = userService.exists(email, password);
+      if (user == null) {
+        ((HttpServletResponse) res).setHeader("Refresh", "1;url=/auth/form");
         res.setContentType("text/html;charset=UTF-8");
-        req.getRequestDispatcher("/auth/form.jsp").include(req, res);
+        req.getRequestDispatcher("/auth/fail.jsp").include(req, res);
+        return;
+      }
+
+      if (req.getParameter("saveEmail") != null) {
+        Cookie cookie = new Cookie("email", email);
+        cookie.setMaxAge(60 * 60 * 24 * 7);
+        res.addCookie(cookie);
+      } else {
+        Cookie cookie = new Cookie("email", "test@test.com");
+        cookie.setMaxAge(0);
+        res.addCookie(cookie);
+      }
+
+      HttpServletRequest httpReq = (HttpServletRequest) req;
+      HttpSession session = httpReq.getSession();
+      session.setAttribute("loginUser", user);
+      res.sendRedirect("/");
+
+    } catch (Exception e) {
+      req.setAttribute("exception", e);
+      req.getRequestDispatcher("/error.jsp").forward(req, res);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        try {
-            String email = req.getParameter("email");
-            String password = req.getParameter("password");
-
-            User user = userDao.findByEmailAndPassword(email, password);
-            if (user == null) {
-                res.setHeader("Refresh", "1;url=/auth/login");
-                res.setContentType("text/html;charset=UTF-8");
-                req.getRequestDispatcher("/auth/fail.jsp").include(req, res);
-                return;
-            }
-            if (req.getParameter("saveEmail") != null) {
-                Cookie cookie = new Cookie("email", email);
-                cookie.setMaxAge(60 * 60 * 24 * 7); // 60초 => 60분 => 24시간 => 7일
-                res.addCookie(cookie);
-            } else {
-                Cookie cookie = new Cookie("email", "");
-                cookie.setMaxAge(0); // -1 저장하지 말아라, 0 지워라
-                res.addCookie(cookie);
-            }
-
-            HttpServletRequest httpReq = req;
-            HttpSession session = httpReq.getSession();
-            session.setAttribute("loginUser", user);
-            res.sendRedirect("/");
-
-        } catch (Exception e) {
-            req.setAttribute("exception", e);
-            req.getRequestDispatcher("/error.jsp").forward(req, res);
-        }
-    }
+  }
 }

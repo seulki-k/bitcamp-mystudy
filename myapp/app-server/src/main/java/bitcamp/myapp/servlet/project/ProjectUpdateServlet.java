@@ -1,14 +1,10 @@
 package bitcamp.myapp.servlet.project;
 
-import bitcamp.myapp.dao.ProjectDao;
+import bitcamp.myapp.service.ProjectService;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
-import org.apache.ibatis.session.SqlSessionFactory;
 
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +16,16 @@ import java.util.ArrayList;
 @WebServlet("/project/update")
 public class ProjectUpdateServlet extends HttpServlet {
 
-  private ProjectDao projectDao;
-  private SqlSessionFactory sqlSessionFactory;
+  private ProjectService projectService;
 
   @Override
   public void init() throws ServletException {
-    this.projectDao = (ProjectDao) this.getServletContext().getAttribute("projectDao");
-    this.sqlSessionFactory = (SqlSessionFactory) this.getServletContext().getAttribute("sqlSessionFactory");
+    this.projectService = (ProjectService) this.getServletContext().getAttribute("projectService");
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
-      req.setCharacterEncoding("UTF-8");
       Project project = new Project();
       project.setNo(Integer.parseInt(req.getParameter("no")));
       project.setTitle(req.getParameter("title"));
@@ -49,19 +42,12 @@ public class ProjectUpdateServlet extends HttpServlet {
         project.setMembers(members);
       }
 
-      if (!projectDao.update(project)) {
+      if (!projectService.update(project)) {
         throw new Exception("없는 프로젝트입니다!");
       }
-
-      projectDao.deleteMembers(project.getNo());
-      if (project.getMembers() != null && project.getMembers().size() > 0) {
-        projectDao.insertMembers(project.getNo(), project.getMembers());
-      }
-      sqlSessionFactory.openSession(false).commit();
-    res.sendRedirect("/project/list");
+      res.sendRedirect("/project/list");
 
     } catch (Exception e) {
-      sqlSessionFactory.openSession(false).rollback();
       req.setAttribute("exception", e);
       req.getRequestDispatcher("/error.jsp").forward(req, res);
     }

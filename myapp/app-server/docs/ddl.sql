@@ -2,7 +2,6 @@ drop table if exists myapp_users restrict;
 drop table if exists myapp_boards restrict;
 drop table if exists myapp_projects restrict;
 drop table if exists myapp_project_members restrict;
-drop table if exists myapp_board_files restrict;
 
 create table myapp_users (
   user_id int not null,
@@ -33,6 +32,18 @@ alter table myapp_boards
 alter table myapp_boards
   add constraint myapp_boards_fk foreign key (user_id) references myapp_users(user_id);
 
+create table myapp_board_files (
+    board_file_id int not null,
+    filename varchar(255) not null,
+    origin_filename varchar(255) null,
+    board_id int not null
+);
+
+alter table myapp_board_files
+    add constraint primary key (board_file_id),
+    modify column board_file_id int not null auto_increment,
+    add constraint myapp_board_files_fk foreign key (board_id) references myapp_boards(board_id);
+
 create table myapp_projects (
   project_id int not null,
   title varchar(255) not null,
@@ -58,17 +69,7 @@ alter table myapp_project_members
 
 
 
-create table myapp_board_files (
-    board_file_id int not null,
-    filename varchar(255),
-    origin_filename varchar(255) null,
-    board_id int not null
-);
 
-alter table myapp_board_files
-    add constraint primary key (board_file_id),
-    modify column board_file_id int not null auto_increment,
-    add constraint myapp_boards_files_fk foreign key (board_id) references myapp_boards(board_id);
 
 
 

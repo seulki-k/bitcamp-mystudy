@@ -27,23 +27,23 @@ import java.io.IOException;
 )
 public class CharacterEncodingFilter implements Filter {
 
-    private String encoding = "UTF-8";
+  private String encoding = "UTF-8";
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        if (filterConfig.getInitParameter("encoding") != null) {
-            encoding = filterConfig.getInitParameter("encoding");
-        }
-        System.out.println("CharacterEncodingFilter 객체 준비!");
+  @Override
+  public void init(FilterConfig filterConfig) throws ServletException {
+    if (filterConfig.getInitParameter("encoding") != null) {
+      encoding = filterConfig.getInitParameter("encoding");
+    }
+    System.out.println("CharacterEncodingFilter 객체 준비!");
+  }
+
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest httpRequest = (HttpServletRequest) request;
+    if (httpRequest.getMethod().equals("POST")) {
+      request.setCharacterEncoding(this.encoding);
     }
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        if (httpRequest.getMethod().equals("POST")) {
-            request.setCharacterEncoding(this.encoding);
-        }
-
-        chain.doFilter(request, response); // 다음 필터 또는 서블릿 실행
-    }
+    chain.doFilter(request, response); // 다음 필터 또는 서블릿 실행
+  }
 }

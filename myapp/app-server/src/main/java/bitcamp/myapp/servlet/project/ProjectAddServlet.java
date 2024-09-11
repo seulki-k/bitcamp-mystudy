@@ -1,51 +1,34 @@
 package bitcamp.myapp.servlet.project;
 
-import bitcamp.myapp.dao.ProjectDao;
-import bitcamp.myapp.dao.UserDao;
+import bitcamp.myapp.service.ProjectService;
 import bitcamp.myapp.vo.Project;
-import bitcamp.myapp.vo.User;
-import org.apache.ibatis.session.SqlSessionFactory;
 
-import javax.servlet.*;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @WebServlet("/project/add")
 public class ProjectAddServlet extends HttpServlet {
 
-  private ProjectDao projectDao;
-  private SqlSessionFactory sqlSessionFactory;
+  private ProjectService projectService;
 
   @Override
   public void init() throws ServletException {
-    ServletContext ctx = this.getServletContext();
-    this.projectDao = (ProjectDao) ctx.getAttribute("projectDao");
-    this.sqlSessionFactory = (SqlSessionFactory) ctx.getAttribute("sqlSessionFactory");
+    this.projectService = (ProjectService) this.getServletContext().getAttribute("projectService");
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     try {
-      Project project =(Project) req.getSession().getAttribute("project");
-
-      projectDao.insert(project);
-
-      if (project.getMembers() != null && project.getMembers().size() > 0) {
-        projectDao.insertMembers(project.getNo(), project.getMembers());
-      }
-      sqlSessionFactory.openSession(false).commit();
-     res.sendRedirect("/project/list");
-    //세션에 임시 보관했던 project 객체를 제거한다.
+      Project project = (Project) req.getSession().getAttribute("project");
+      projectService.add(project);
       req.getSession().removeAttribute("project");
+      res.sendRedirect("/project/list");
 
     } catch (Exception e) {
-      sqlSessionFactory.openSession(false).rollback();
       req.setAttribute("exception", e);
       req.getRequestDispatcher("/error.jsp").forward(req, res);
     }

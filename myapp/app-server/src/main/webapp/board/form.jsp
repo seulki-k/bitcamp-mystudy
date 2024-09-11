@@ -10,7 +10,7 @@
 <form action='/board/add' method="post" enctype="multipart/form-data">
     제목: <input name='title' type='text'><br>
     내용: <textarea name='content'></textarea><br>
-    첨부파일 : <input name="files" type="file" multipart><br>
+    첨부파일: <input name="files" type="file" multiple><br>
     <input type='submit' value='등록'>
 </form>
 
