@@ -2,36 +2,26 @@ package bitcamp.myapp.servlet;
 
 import bitcamp.myapp.annotation.RequestMapping;
 import bitcamp.myapp.annotation.RequestParam;
+import bitcamp.myapp.context.ApplicationContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@MultipartConfig(
-        maxFileSize = 1024 * 1024 * 60,
-        maxRequestSize = 1024 * 1024 * 100)
-@WebServlet("/app/*")
 public class DispatcherServlet extends HttpServlet {
 
+  ApplicationContext appCtx;
   private List<Object> controllers;
 
-  @Override
-  public void init() throws ServletException {
-    controllers = (List<Object>) this.getServletContext().getAttribute("controllers");
+  public DispatcherServlet(ApplicationContext appCtx) {
+    this.appCtx = appCtx;
+    this.controllers = appCtx.getControllers();
   }
 
   @Override
@@ -61,14 +51,14 @@ public class DispatcherServlet extends HttpServlet {
         throw new Exception("해당 URL을 처리할 수 없습니다.");
       }
 
-      if (requestHandler.getReturnType() == void.class) {
-        requestHandler.invoke(pageController, req, res);
-        return;
-      }
-
       Map<String, Object> map = new HashMap<>();
 
       Object[] arguments = prepareRequestHandlerArguments(requestHandler, req, res, map);
+
+      if (requestHandler.getReturnType() == void.class) {
+        requestHandler.invoke(pageController, arguments);
+        return;
+      }
 
       String viewName = (String) requestHandler.invoke(pageController, arguments);
 
@@ -120,6 +110,12 @@ public class DispatcherServlet extends HttpServlet {
                 param.getType(), // ServletRequest 보관소에서 꺼낸 값을 형변환할 때 타입
                 paramAnno.value() // ServletRequet 보관소에서 꺼낼 값의 파라미터명
         ));
+      } else if (paramType == Part.class) {
+        RequestParam paramAnno = param.getAnnotation(RequestParam.class);
+        args.add(req.getPart(paramAnno.value()));
+      } else if (paramType == Part[].class) {
+        RequestParam paramAnno = param.getAnnotation(RequestParam.class);
+        args.add(getPartArray(req, paramAnno.value()));
       } else {
         args.add(createDomainObject(req, param.getType()));
       }
@@ -141,7 +137,7 @@ public class DispatcherServlet extends HttpServlet {
 
     // 클라이언트가 보낸 값들 중에서 paramName에 해당하는 값을 꺼낸다.
     String paramValue = req.getParameter(paramName);
-    if (paramType != boolean.class && paramType != int[].class && paramValue == null) {
+    if (paramType != boolean.class && paramType.getComponentType() == null && paramValue == null) {
       return null;
     }
 
@@ -212,6 +208,19 @@ public class DispatcherServlet extends HttpServlet {
 
     // 클라이언트가 보낸 값을 보관한 도메인 객체를 리턴한다.
     return domainObject;
+  }
+
+  private Part[] getPartArray(HttpServletRequest req, String paramName) throws Exception {
+    Collection<Part> parts = req.getParts();
+    ArrayList<Part> list = new ArrayList<>();
+
+    for (Part part : parts) {
+      if (!part.getName().equals(paramName)) {
+        continue;
+      }
+      list.add(part);
+    }
+    return list.toArray(new Part[0]);
   }
 
 }
