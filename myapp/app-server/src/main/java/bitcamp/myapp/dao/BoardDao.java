@@ -4,6 +4,7 @@ import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BoardDao {
 

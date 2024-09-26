@@ -3,6 +3,7 @@ package bitcamp.myapp.dao;
 import bitcamp.myapp.vo.User;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserDao {
 

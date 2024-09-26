@@ -47,6 +47,7 @@ public class BoardController {
     board.setWriter(loginUser);
 
     ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+
     for (MultipartFile file : files) {
       if (file.getSize() == 0) {
         continue;
@@ -60,6 +61,7 @@ public class BoardController {
 
       attachedFiles.add(attachedFile);
     }
+
 
     board.setAttachedFiles(attachedFiles);
 

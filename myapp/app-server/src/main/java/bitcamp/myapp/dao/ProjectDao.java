@@ -4,6 +4,7 @@ import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProjectDao {
 
