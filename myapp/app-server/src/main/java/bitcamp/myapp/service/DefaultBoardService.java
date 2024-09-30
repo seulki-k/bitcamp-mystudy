@@ -20,7 +20,7 @@ public class DefaultBoardService implements BoardService {
     this.boardDao = boardDao;
   }
 
-  @Transactional
+  @Transactional //insert가 2개로 하나의 트랜잭션으로 묶음
   @Override
   public void add(Board board) throws Exception {
     boardDao.insert(board);

@@ -1,6 +1,7 @@
 package bitcamp.myapp.controller;
 
 import bitcamp.myapp.service.BoardService;
+import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.User;
 import org.springframework.http.HttpHeaders;
@@ -19,21 +20,19 @@ import java.util.Map;
 public class DownloadController {
 
   private BoardService boardService;
-  private Map<String, String> downloadPathMap = new HashMap<>();
+  private StorageService storageService;
 
-  public DownloadController(BoardService boardService, ServletContext ctx) {
+  public DownloadController(BoardService boardService, StorageService storageService) {
     this.boardService = boardService;
-    this.downloadPathMap.put("board", ctx.getRealPath("/upload/board"));
-    this.downloadPathMap.put("user", ctx.getRealPath("/upload/user"));
-    this.downloadPathMap.put("project", ctx.getRealPath("/upload/project"));
+    this.storageService = storageService;
   }
 
   @GetMapping("/download")
   public HttpHeaders download(
-          String path,
-          int fileNo,
-          HttpSession session,
-          OutputStream out) throws Exception {
+      String path,
+      int fileNo,
+      HttpSession session,
+      OutputStream out) throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
 
@@ -42,33 +41,14 @@ public class DownloadController {
       throw new Exception("로그인 하지 않았습니다.");
     }
 
-    String downloadDir = downloadPathMap.get(path);
+    AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
 
-    if (path.equals("board")) {
-      AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
+    headers.add("Content-Disposition",
+        String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
+    );
 
-      headers.add("Content-Disposition",
-              String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
-      );
-
-      BufferedInputStream downloadFileIn = new BufferedInputStream(
-              new FileInputStream(downloadDir + "/" + attachedFile.getFilename()));
-
-      int b;
-      while ((b = downloadFileIn.read()) != -1) {
-        out.write(b);
-      }
-
-      downloadFileIn.close();
-
-
-    } else if (path.equals("user")) {
-
-    } else {
-
-    }
+    storageService.download(path + "/" + attachedFile.getFilename(), out);
 
     return headers;
   }
-
 }

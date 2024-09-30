@@ -28,7 +28,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @ComponentScan("bitcamp.myapp")
 @EnableWebMvc
-@PropertySource("classpath:config/jdbc.properties")
+@PropertySource({
+    "classpath:config/jdbc.properties"
+, "file:${user.home}/config/ncp.properties"
+    })
 @EnableTransactionManagement // 스프링 프레임워크야, @Transactional 메서드가 붙은 클래스를 만나면 Proxy 클래스를 자동 생성하라!
 @MapperScan("bitcamp.myapp.dao")
 public class AppConfig {
@@ -37,6 +40,8 @@ public class AppConfig {
 
   public AppConfig(ApplicationContext appCtx) {
     this.appCtx = appCtx;
+    //AWS 경고 메시지 제거
+    System.getProperties().setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
   }
 
   @Bean

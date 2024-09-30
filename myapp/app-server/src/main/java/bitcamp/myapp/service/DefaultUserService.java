@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -37,19 +38,11 @@ public class DefaultUserService implements UserService {
 
   @Transactional
   public boolean update(User user) throws Exception {
-      if (userDao.update(user)) {
-        return true;
-      } else {
-        return false;
-      }
+    return userDao.update(user);
   }
 
   @Transactional
   public boolean delete(int userNo) throws Exception {
-      if (userDao.delete(userNo)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
+    return userDao.delete(userNo);
+  }
 }
