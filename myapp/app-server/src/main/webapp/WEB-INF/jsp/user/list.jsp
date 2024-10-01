@@ -11,14 +11,20 @@
 <p><a href='form'>새 회원</a></p>
 <table>
   <thead>
-      <tr><th>번호</th><th>이름</th><th>이메일</th></tr>
+      <tr>
+        <th>번호</th>
+        <th>이름</th>
+        <th>이메일</th>
+      </tr>
   </thead>
   <tbody>
 
 <c:forEach items="${list}" var="user">
 <tr>
   <td>${user.no}</td>
-  <td><a href='view?no=${user.no}'>${user.name}</a></td>
+  <td>
+   <img src="https://tg1r4kjz4936.edge.naverncp.com/94ppDaDRPr/user/${user.photo ==null ? 'default.png':user.photo}?type=f&w=20&h=20">
+  <a href='view?no=${user.no}'>${user.name}</a></td>
   <td>${user.email}</td>
 </tr>
 </c:forEach>
