@@ -21,17 +21,16 @@ public class User implements Serializable {
     this.no = no;
   }
 
-
   @Override
   public String toString() {
     return "User{" +
-        "no=" + no +
-        ", name='" + name + '\'' +
-        ", email='" + email + '\'' +
-        ", password='" + password + '\'' +
-        ", tel='" + tel + '\'' +
-        ", photo='" + photo + '\'' +
-        '}';
+            "no=" + no +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", tel='" + tel + '\'' +
+            ", photo='" + photo + '\'' +
+            '}';
   }
 
   @Override
@@ -91,11 +90,11 @@ public class User implements Serializable {
     this.tel = tel;
   }
 
-  public void setPhoto(String photo) {
-    this.photo = photo;
-  }
-
   public String getPhoto() {
     return photo;
+  }
+
+  public void setPhoto(String photo) {
+    this.photo = photo;
   }
 }

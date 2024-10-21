@@ -5,54 +5,45 @@ import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.User;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.util.HashMap;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/board")
 public class BoardController {
 
   private BoardService boardService;
   private StorageService storageService;
+
   private String folderName = "board/";
 
-  public BoardController(BoardService boardService,
-      StorageService storageService) {
+  public BoardController(
+          BoardService boardService,
+          StorageService storageService) {
     this.boardService = boardService;
     this.storageService = storageService;
   }
 
-  @GetMapping("/board/form")
+  @GetMapping("form")
   public void form() {
   }
 
-  @PostMapping("/board/add")
+  @PostMapping("add")
   public String add(
-      Board board,
-      MultipartFile[] files,
-      HttpSession session) throws Exception {
+          Board board,
+          MultipartFile[] files,
+          HttpSession session) throws Exception {
 
     User loginUser = (User) session.getAttribute("loginUser");
     if (loginUser == null) {
@@ -75,8 +66,9 @@ public class BoardController {
       // 첨부 파일을 Object Storage에 올린다.
       HashMap<String, Object> options = new HashMap<>();
       options.put(StorageService.CONTENT_TYPE, file.getContentType());
-      storageService.upload(folderName + attachedFile.getFilename(), file.getInputStream(),
-          options);
+      storageService.upload(folderName + attachedFile.getFilename(),
+              file.getInputStream(),
+              options);
 
       attachedFiles.add(attachedFile);
     }
@@ -87,13 +79,13 @@ public class BoardController {
     return "redirect:list";
   }
 
-  @GetMapping("/board/list")
+  @GetMapping("list")
   public void list(Model model) throws Exception {
     List<Board> list = boardService.list();
     model.addAttribute("list", list);
   }
 
-  @GetMapping("/board/view")
+  @GetMapping("view")
   public void view(int no, Model model) throws Exception {
     Board board = boardService.get(no);
     if (board == null) {
@@ -105,21 +97,20 @@ public class BoardController {
     model.addAttribute("board", board);
   }
 
-  @PostMapping("/board/update")
+  @PostMapping("update")
   public String update(
-      int no,
-      String title,
-      String content,
-      Part[] files,
-      HttpSession session) throws Exception {
+          int no,
+          String title,
+          String content,
+          Part[] files,
+          HttpSession session) throws Exception {
 
     User loginUser = (User) session.getAttribute("loginUser");
 
     Board board = boardService.get(no);
     if (board == null) {
       throw new Exception("없는 게시글입니다.");
-    } else if (loginUser == null
-        || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
       throw new Exception("변경 권한이 없습니다.");
     }
 
@@ -140,8 +131,9 @@ public class BoardController {
       // 첨부 파일을 Object Storage에 올린다.
       HashMap<String, Object> options = new HashMap<>();
       options.put(StorageService.CONTENT_TYPE, part.getContentType());
-      storageService.upload(folderName + attachedFile.getFilename(), part.getInputStream(),
-          options);
+      storageService.upload(folderName + attachedFile.getFilename(),
+              part.getInputStream(),
+              options);
 
       attachedFiles.add(attachedFile);
     }
@@ -152,18 +144,17 @@ public class BoardController {
     return "redirect:list";
   }
 
-  @GetMapping("/board/delete")
+  @GetMapping("delete")
   public String delete(
-      int no,
-      HttpSession session) throws Exception {
+          int no,
+          HttpSession session) throws Exception {
 
     User loginUser = (User) session.getAttribute("loginUser");
     Board board = boardService.get(no);
 
     if (board == null) {
       throw new Exception("없는 게시글입니다.");
-    } else if (loginUser == null
-        || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
+    } else if (loginUser == null || loginUser.getNo() > 10 && board.getWriter().getNo() != loginUser.getNo()) {
       throw new Exception("삭제 권한이 없습니다.");
     }
 
@@ -179,11 +170,11 @@ public class BoardController {
     return "redirect:list";
   }
 
-  @GetMapping("/board/file/delete")
+  @GetMapping("file/delete")
   public String fileDelete(
-      HttpSession session,
-      int fileNo,
-      int boardNo) throws Exception {
+          HttpSession session,
+          int fileNo,
+          int boardNo) throws Exception {
 
     User loginUser = (User) session.getAttribute("loginUser");
     if (loginUser == null) {
@@ -207,7 +198,6 @@ public class BoardController {
     }
 
     boardService.deleteAttachedFile(fileNo);
-
     return "redirect:../view?no=" + boardNo;
   }
 

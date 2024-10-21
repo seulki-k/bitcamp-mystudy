@@ -14,20 +14,35 @@
 </c:if>
 
 <c:if test="${not empty user}">
-    <form action='update' method="post" enctype="multipart/form-data">
-    <a href="https://kr.object.ncloudstorage.com/bitcamp-bucket075/user/${user.photo == null ? 'default.png' : user.photo}">
-    <img src="https://tg1r4kjz4936.edge.naverncp.com/94ppDaDRPr/user/${user.photo ==null ? 'default.png':user.photo}?type=f&w=100&h=100">
-    </a><br>
-    <input name="file" type="file"><br>
-        번호: <input name='no' readonly type='text' value='${user.no}'><br>
+    <form method="post" enctype="multipart/form-data">
+        <a href="https://kr.object.ncloudstorage.com/bitcamp-bucket118/user/${user.photo == null ? 'default.png' : user.photo}">
+            <img src="https://p2zqyggq4939.edge.naverncp.com/UZxHbepmRn/user/${user.photo == null ? 'default.png' : user.photo}?type=f&w=100&h=100">
+        </a><input name="file" type="file"><br>
+        번호: <input readonly type='text' value='${user.no}'><br>
         이름: <input name='name' type='text' value='${user.name}'><br>
         이메일: <input name='email' type='email' value='${user.email}'><br>
         암호: <input name='password' type='password'><br>
         연락처: <input name='tel' type='tel' value='${user.tel}'><br>
         <button>변경</button>
-        <button type='button' onclick='location.href="delete?no=${user.no}"'>삭제</button>
+        <button type='button' onclick='deleteUser(${user.no})'>삭제</button>
     </form>
 </c:if>
+
+<script>
+function deleteUser(no) {
+    console.log("삭제 실행!");
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", location.href, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            location.href = "../users";
+        } else {  // 오류가 발생했을 때
+            window.alert("삭제 실패입니다!");
+        }
+    };
+    xhr.send();
+}
+</script>
 
 </body>
 </html>

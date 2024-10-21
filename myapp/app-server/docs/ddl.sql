@@ -17,8 +17,7 @@ alter table myapp_users
   add constraint myapp_users_uk unique (email);
 
 alter table myapp_users
-  add column photo varchar(100);
-
+    add column photo varchar(100);
 
 create table myapp_boards (
   board_id int not null,

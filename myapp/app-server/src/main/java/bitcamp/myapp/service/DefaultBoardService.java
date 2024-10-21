@@ -3,25 +3,24 @@ package bitcamp.myapp.service;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.checkerframework.checker.signature.qual.BinaryNameOrPrimitiveType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultBoardService implements BoardService {
 
   private BoardDao boardDao;
+  private PlatformTransactionManager txManager;
 
-  public DefaultBoardService(BoardDao boardDao) {
+  public DefaultBoardService(BoardDao boardDao, PlatformTransactionManager txManager) {
     this.boardDao = boardDao;
+    this.txManager = txManager;
   }
 
-  @Transactional //insert가 2개로 하나의 트랜잭션으로 묶음
-  @Override
+  @Transactional
   public void add(Board board) throws Exception {
     boardDao.insert(board);
     if (board.getAttachedFiles().size() > 0) {
@@ -29,12 +28,10 @@ public class DefaultBoardService implements BoardService {
     }
   }
 
-  @Override
   public List<Board> list() throws Exception {
     return boardDao.list();
   }
 
-  @Override
   public Board get(int boardNo) throws Exception {
     return boardDao.findBy(boardNo);
   }

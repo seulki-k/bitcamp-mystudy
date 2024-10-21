@@ -2,13 +2,10 @@ package bitcamp.myapp.service;
 
 import bitcamp.myapp.dao.UserDao;
 import bitcamp.myapp.vo.User;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DefaultUserService implements UserService {
@@ -21,8 +18,8 @@ public class DefaultUserService implements UserService {
 
   @Transactional
   public void add(User user) throws Exception {
-      userDao.insert(user);
-    }
+    userDao.insert(user);
+  }
 
   public List<User> list() throws Exception {
     return userDao.list();

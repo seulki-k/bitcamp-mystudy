@@ -26,8 +26,8 @@
     </select>
 
     <insert id="insert" parameterType="user">
-        insert into myapp_users(name, email, pwd, tel,photo)
-        values (#{name}, #{email}, sha1(#{password}), #{tel},#{photo})
+        insert into myapp_users(name, email, pwd, tel, photo)
+        values (#{name}, #{email}, sha1(#{password}), #{tel}, #{photo})
     </insert>
 
     <select id="findBy" resultMap="UserMap" parameterType="int">
@@ -61,7 +61,7 @@
             email=#{email},
             pwd=sha1(#{password}),
             tel=#{tel},
-        photo=#{photo}
+            photo=#{photo}
         where
             user_id=#{no}
     </update>

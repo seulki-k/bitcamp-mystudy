@@ -8,13 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class DownloadController {
@@ -29,10 +24,10 @@ public class DownloadController {
 
   @GetMapping("/download")
   public HttpHeaders download(
-      String path,
-      int fileNo,
-      HttpSession session,
-      OutputStream out) throws Exception {
+          String path,
+          int fileNo,
+          HttpSession session,
+          OutputStream out) throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
 
@@ -44,11 +39,12 @@ public class DownloadController {
     AttachedFile attachedFile = boardService.getAttachedFile(fileNo);
 
     headers.add("Content-Disposition",
-        String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
+            String.format("attachment; filename=\"%s\"", attachedFile.getOriginFilename())
     );
 
     storageService.download(path + "/" + attachedFile.getFilename(), out);
 
     return headers;
   }
+
 }
