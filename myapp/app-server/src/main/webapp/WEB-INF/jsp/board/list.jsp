@@ -1,6 +1,6 @@
 <%@ page
-    language="java" 
-    contentType="text/html;charset=UTF-8" 
+    language="java"
+    contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -27,6 +27,24 @@
   </tbody>
 </table>
 
+[
+<c:if test="${pageNo > 1}">
+    <a href="list?pageNo=${pageNo - 1}&pageSize=${pageSize}">이전<a>
+</c:if>
+<c:if test="${pageNo <= 1}">
+    이전
+</c:if>
+]
 
+${pageNo}
+
+[
+<c:if test="${pageNo < pageCount}">
+    <a href="list?pageNo=${pageNo + 1}&pageSize=${pageSize}">다음<a>
+</c:if>
+<c:if test="${pageNo >= pageCount}">
+    다음
+</c:if>
+]
 </body>
 </html>
