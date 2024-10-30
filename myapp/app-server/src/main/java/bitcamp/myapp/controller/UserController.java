@@ -3,29 +3,27 @@ package bitcamp.myapp.controller;
 import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.service.UserService;
 import bitcamp.myapp.vo.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/users")
 public class UserController {
 
-  private UserService userService;
-  private StorageService storageService;
+  private final UserService userService;
+  private final StorageService storageService;
 
   private String folderName = "user/";
-
-  public UserController(UserService userService, StorageService storageService) {
-    this.userService = userService;
-    this.storageService = storageService;
-  }
 
   @GetMapping("form")
   public String form() {
@@ -62,6 +60,19 @@ public class UserController {
           @PathVariable int no,
           Model model) throws Exception {
     User user = userService.get(no);
+    model.addAttribute("user", user);
+    return "user/view";
+  }
+
+  @GetMapping("myInfo")
+  public String myInfo(
+          HttpSession session,
+          Model model) throws Exception {
+    User loginUser = (User) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인이 필요합니다.");
+    }
+    User user = userService.get(loginUser.getNo());
     model.addAttribute("user", user);
     return "user/view";
   }

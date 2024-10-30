@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": "../../../../../../eomcs-java"
+		},
+		{
+			"path": "../../../../../../bitcamp-study"
+		},
+		{
+			"path": "../../../../.."
+		},
+		{
+			"path": "../../../../../../bitcamp-project1"
+		},
+		{
+			"path": "../../../../../../eomcs-docs"
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.debug.settings.onBuildFailureProceed": true
+	}
+}

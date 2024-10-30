@@ -3,6 +3,7 @@ package bitcamp.myapp.service;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,16 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class DefaultBoardService implements BoardService {
 
-  private BoardDao boardDao;
-  private PlatformTransactionManager txManager;
-
-  public DefaultBoardService(BoardDao boardDao, PlatformTransactionManager txManager) {
-    this.boardDao = boardDao;
-    this.txManager = txManager;
-  }
+  private final BoardDao boardDao;
+  private final PlatformTransactionManager txManager;
 
   @Transactional
   public void add(Board board) throws Exception {

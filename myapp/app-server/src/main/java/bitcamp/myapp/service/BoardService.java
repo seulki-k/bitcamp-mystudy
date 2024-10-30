@@ -15,8 +15,7 @@ public interface BoardService {
 
   void increaseViewCount(int boardNo) throws Exception;
 
-  int countAll() throws  Exception;
-
+  int countAll() throws Exception;
 
   boolean update(Board board) throws Exception;
 
